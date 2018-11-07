@@ -25,7 +25,7 @@ class SpaceBullet extends THREE.Mesh {
     var sound = new THREE.PositionalAudio(listener);
     // Caricamento dell'oggetto audio
     var audioLoader = new THREE.AudioLoader();
-    audioLoader.load("/Solar/sound/bullet.ogg", function(buffer) {
+    audioLoader.load("../../sound/bullet.ogg", function(buffer) {
       sound.setBuffer(buffer);
       sound.setRefDistance(10);
       sound.setVolume(0.1);
