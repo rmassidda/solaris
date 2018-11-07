@@ -48,7 +48,7 @@ class SpaceSpecialTarget extends THREE.Mesh {
 		var sound = new THREE.PositionalAudio(listener);
 		// Caricamento dell'oggetto audio
 		var audioLoader = new THREE.AudioLoader();
-		audioLoader.load('../sound/die.ogg', function (buffer) {
+		audioLoader.load('../../sound/die.ogg', function (buffer) {
 			sound.setBuffer(buffer);
 			sound.setRefDistance(20);
 			sound.setVolume(0.6);
