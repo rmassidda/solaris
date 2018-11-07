@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html >
+	<head>
+		<meta charset="UTF-8">
+		<title>Solaris</title> 		
+		<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+		<link rel="stylesheet" href="css/style.css"> 
+	</head>
+
+	<body>
+		<canvas id="canvas"></canvas>
+		<div id="bar">
+			<!--<img id="help" src="img/help.png" height="100%">-->
+			<img id="pause" src="img/pause.png" height="100%">
+			<img id="refresh" src="img/refresh.png" height="100%">
+		</div>
+		<div id="stats">LP: <span id="life_points"></span> <span id="distance"></span>m <span id="speed"></span>m/s</div>
+		<div id="title">
+			<h1 class="title">СОЛЯРИС</h1>
+			<h2 class="title">click anywhere to start</h2>
+			<h3></h3>
+			<h3></h3>
+			<h3></h3>
+			<p></p>
+		</div>
+		<div class="notify" id="notify_left"><h1></h1></div>
+		<div class="notify" id="notify_center"><h1></h1></div>
+		<div class="notify" id="notify_right"><h1></h1></div>
+		<script type="module" src="js/libs/fscreen/fscreen.js"></script>
+		<script src='js/libs/three.min.js'></script>
+		<script src="js/scenes/Game.js"></script>
+		<script src="js/subjects/Lifebar.js"></script>
+		<script src="js/subjects/SpaceObject.js"></script>
+		<script src="js/subjects/SpaceBullet.js"></script>
+		<script src="js/subjects/SpaceTarget.js"></script> 
+		<script src="js/subjects/SpaceSpecialTarget.js"></script>    
+		<script type="module" src="js/main.js"></script>
+	</body>
+</html>
