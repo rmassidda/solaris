@@ -1,4 +1,4 @@
-import fscreen from  "./libs/fscreen/fscreen.js"
+import fscreen from  "./libs/fscreen/"
 //	Canvas
 const canvas = document.getElementById("canvas");
 //	Scena di gioco
