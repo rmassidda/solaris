@@ -37,7 +37,7 @@ html, body {
     z-index: 100;
     text-align: center;
     animation-name: disappear;
-    animation-duration: 4s;
+    animation-duration: 2s;
 }
 
 #left{

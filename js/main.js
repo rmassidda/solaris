@@ -79,21 +79,6 @@ function resizeCanvas() {
 function render() {
 	//	Update objects
 	gameScene.update();
-	
-	//	Get notifications still viewable
-	/*var viewable_notifications = notifications.filter(obj => obj.style.opacity>0);
-	//	Make disappear the notification
-	viewable_notifications.forEach(element => {
-		var opacity = parseFloat(element.style.opacity);
-		//	TODO: Speed should be fixed some way
-		opacity -= 0.02;
-		if(opacity<=0){
-			element.style.opacity = 0;
-		}
-		else{
-			element.style.opacity = opacity;
-		}
-	});*/
 
 	//	Modalità di gioco
 	if(gameScene.mode == 'play'){
@@ -113,10 +98,10 @@ function render() {
 		var notification = gameScene.notify.pop();
 		//	If there's some new notification
 		if(notification!=null){
-			//	Remove old notification
+			//	Remove old notification (if present)
 			var old_notification = document.getElementById(notification.position);
 			if(old_notification!=null){
-				document.body.remove(old_notification);
+				document.body.removeChild(old_notification);
 			}
 			//	New notification element
 			var new_notification = document.createElement('div');
@@ -130,6 +115,8 @@ function render() {
 			var c = notification.color;
 			//	Set the color
 			new_notification.style.color = 'rgb('+c.r*100+'%,'+c.g*100+'%,'+c.b*100+'%)';
+			//	Set opacity to zero, this is the value at the end of the animation
+			new_notification.style.opacity = 0;
 			//	Set the text value
 			new_notification.firstElementChild.innerHTML = notification.value;
 			//	Add it to the document
