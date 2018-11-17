@@ -13,9 +13,11 @@ var title = document.getElementById("title");
 title.style.opacity = 0;
 title.style.visibility = 'visible';
 //	Notify
-var notify_left = document.getElementById("notify_left");
-var notify_center = document.getElementById("notify_center");
-var notify_right = document.getElementById("notify_right");
+var notifications = [];
+notifications[0]= document.getElementById("notify_left");
+notifications[1] = document.getElementById("notify_center");
+notifications[2] = document.getElementById("notify_right");
+
 //	Statistics
 var stat = document.getElementById("stats");
 stat.children[0].innerText = Math.floor(gameScene.points);
@@ -78,47 +80,21 @@ function render() {
 	//	Update objects
 	gameScene.update();
 	
-	//	Draw
-	//	Make notifications disappear
-	//	TODO: Use the game speed!
-	//	TODO: Is there a smarter way to do this? Same code for three objects, maybe an array of notifies and a filter function
-	/*
-		Something like:
-		var not = [left,center,right]
-		var not_still_viewable = filter(not,function(x){x.style.opacity>0})
-		for n in not_stillviewable
-			same code written down 
-	*/
-	if(notify_right.style.opacity > 0){
-		var opacity = parseFloat(notify_right.style.opacity);
+	//	Get notifications still viewable
+	var viewable_notifications = notifications.filter(obj => obj.style.opacity>0);
+	//	Make disappear the notification
+	viewable_notifications.forEach(element => {
+		var opacity = parseFloat(element.style.opacity);
+		//	TODO: Speed should be fixed some way
 		opacity -= 0.02;
 		if(opacity<=0){
-			notify_right.style.opacity = 0;
+			element.style.opacity = 0;
 		}
 		else{
-			notify_right.style.opacity = opacity;
+			element.style.opacity = opacity;
 		}
-	}
-	if(notify_center.style.opacity > 0){
-		var opacity = parseFloat(notify_center.style.opacity);
-		opacity -= 0.02;
-		if(opacity<=0){
-			notify_center.style.opacity = 0;
-		}
-		else{
-			notify_center.style.opacity = opacity;
-		}
-	}
-	if(notify_left.style.opacity > 0){
-		var opacity = parseFloat(notify_left.style.opacity);
-		opacity -= 0.02;
-		if(opacity<=0){
-			notify_left.style.opacity = 0;
-		}
-		else{
-			notify_left.style.opacity = opacity;
-		}
-	}
+	});
+
 	//	Modalità di gioco
 	if(gameScene.mode == 'play'){
 		//	Se il titolo non è ancora scomparso
@@ -133,23 +109,33 @@ function render() {
 				title.style.opacity = opacity;
 			}
 		}
+		//	Get notification from the game
 		var notification = gameScene.notify.pop();
+		//	If there's some new notification
 		if(notification!=null){
 			var notify_slot;
+			//	Set the position
 			switch(notification.position){
 				case 'left':
-					notify_slot = notify_left;
+					notify_slot = notifications[0];
 					break;
 				case 'center':
-					notify_slot = notify_center;
+					notify_slot = notifications[1];
 					break;
 				case 'right':
-					notify_slot = notify_right;
+					notify_slot = notifications[2];
+					break;
+				default:
+					notify_slot = notifications[1];
 					break;
 			}
+			//	Get the color
 			var c = notification.color;
+			//	Set the color
 			notify_slot.style.color = 'rgb('+c.r*100+'%,'+c.g*100+'%,'+c.b*100+'%)';
+			//	Make it visible
 			notify_slot.style.opacity = 1;
+			//	Set the text value
 			notify_slot.firstElementChild.innerHTML = notification.value;
 		}
 	}
