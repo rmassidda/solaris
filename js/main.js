@@ -77,7 +77,7 @@ function render() {
 	//	Update objects
 	gameScene.update();
 
-	//	Modalità di gioco
+	//	Play!
 	if(gameScene.mode == 'play'){
 		title.style.opacity = 0;
 		title.style.animationName = 'disappear';
@@ -108,30 +108,29 @@ function render() {
 			document.body.appendChild(new_notification);
 		}
 	}
-	else if(gameScene.mode == 'intro'){
+	else{ 
+		// Make the menu visible
 		title.style.animationName = 'appear';
 		title.style.opacity = 1;
-		title.children[2].innerHTML = 'New Game';
-		title.children[2].style.color = 'green';
-		title.children[3].innerHTML = '';
-		title.children[4].innerHTML = '';
-	}
-	else if(gameScene.mode == 'game_over'){
-		title.style.animationName = 'appear';
-		title.style.opacity = 1;
-		highscore = Math.ceil(Math.max(highscore,gameScene.distance));
-		title.children[2].innerHTML = 'Game Over';
-		title.children[2].style.color = 'red';
-		title.children[3].innerHTML = 'Current score\t'+Math.ceil(gameScene.distance);
-		title.children[4].innerHTML = 'Highscore\t'+highscore;
-	}
-	else if(gameScene.mode == 'pause'){
-		title.style.animationName = 'appear';
-		title.style.opacity = 1;
-		title.children[2].innerHTML = 'Pause';
-		title.children[2].style.color = 'green';
-		title.children[3].innerHTML = 'Current score\t'+Math.ceil(gameScene.distance);
-		title.children[4].innerHTML = 'Highscore\t'+highscore;
+		if(gameScene.mode == 'intro'){
+			title.children[2].innerHTML = 'New Game';
+			title.children[2].style.color = 'green';
+			title.children[3].innerHTML = '';
+			title.children[4].innerHTML = '';
+		}
+		else if(gameScene.mode == 'game_over'){
+			highscore = Math.ceil(Math.max(highscore,gameScene.distance));
+			title.children[2].innerHTML = 'Game Over';
+			title.children[2].style.color = 'red';
+			title.children[3].innerHTML = 'Current score\t'+Math.ceil(gameScene.distance);
+			title.children[4].innerHTML = 'Highscore\t'+highscore;
+		}
+		else if(gameScene.mode == 'pause'){
+			title.children[2].innerHTML = 'Pause';
+			title.children[2].style.color = 'green';
+			title.children[3].innerHTML = 'Current score\t'+Math.ceil(gameScene.distance);
+			title.children[4].innerHTML = 'Highscore\t'+highscore;
+		}
 	}
 	
 	//	
