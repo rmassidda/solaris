@@ -104,13 +104,11 @@ function render() {
 				document.body.removeChild(old_notification);
 			}
 			//	New notification element
-			var new_notification = document.createElement('div');
+			var new_notification = document.createElement('h1');
 			//	Class name
 			new_notification.className = 'notify';
 			//	Unique ID
 			new_notification.id = notification.position;
-			//	Text value
-			new_notification.append(document.createElement('h1'));
 			//	Get the color
 			var c = notification.color;
 			//	Set the color
@@ -118,7 +116,7 @@ function render() {
 			//	Set opacity to zero, this is the value at the end of the animation
 			new_notification.style.opacity = 0;
 			//	Set the text value
-			new_notification.firstElementChild.innerHTML = notification.value;
+			new_notification.innerText = notification.value;
 			//	Add it to the document
 			document.body.appendChild(new_notification);
 		}
