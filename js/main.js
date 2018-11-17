@@ -18,7 +18,7 @@ notifications[0]= document.getElementById("notify_left");
 notifications[1] = document.getElementById("notify_center");
 notifications[2] = document.getElementById("notify_right");
 //	Fullscreen abilitation
-var enable_fullscreen = true;
+var enableFullscreen = true;
 //	Statistics
 var stat = document.getElementById("stats");
 stat.style.opacity = 0;
@@ -52,7 +52,7 @@ function switchStatistics(){
 }
 
 function switchFullscreen(){
-	enable_fullscreen = !enable_fullscreen;
+	enableFullscreen = !enableFullscreen;
 }
 
 function onKeyDown(event){
@@ -69,7 +69,7 @@ function OnMouseDown(event){
 	var mouse = new THREE.Vector2();
 	mouse.x = ( event.pageX /  window.innerWidth ) * 2 - 1;
 	mouse.y = - ( event.pageY /  window.innerHeight) * 2 + 1;
-	if (fscreen.fullscreenElement === null && enable_fullscreen) {
+	if (fscreen.fullscreenElement === null && enableFullscreen) {
 		fscreen.requestFullscreen(document.body);
 		resizeCanvas();
 	}
@@ -148,7 +148,7 @@ function render() {
 		}
 	}
 	
-	//	
+	//	Statistics
 	stat.children[0].innerText = Math.floor(gameScene.points);
 	stat.children[1].innerHTML = gameScene.distance.toFixed(2);
 	stat.children[2].innerHTML = gameScene.speed.toFixed(2);
