@@ -81,7 +81,7 @@ function render() {
 	gameScene.update();
 	
 	//	Get notifications still viewable
-	var viewable_notifications = notifications.filter(obj => obj.style.opacity>0);
+	/*var viewable_notifications = notifications.filter(obj => obj.style.opacity>0);
 	//	Make disappear the notification
 	viewable_notifications.forEach(element => {
 		var opacity = parseFloat(element.style.opacity);
@@ -93,7 +93,7 @@ function render() {
 		else{
 			element.style.opacity = opacity;
 		}
-	});
+	});*/
 
 	//	Modalità di gioco
 	if(gameScene.mode == 'play'){
@@ -113,30 +113,27 @@ function render() {
 		var notification = gameScene.notify.pop();
 		//	If there's some new notification
 		if(notification!=null){
-			var notify_slot;
-			//	Set the position
-			switch(notification.position){
-				case 'left':
-					notify_slot = notifications[0];
-					break;
-				case 'center':
-					notify_slot = notifications[1];
-					break;
-				case 'right':
-					notify_slot = notifications[2];
-					break;
-				default:
-					notify_slot = notifications[1];
-					break;
+			//	Remove old notification
+			var old_notification = document.getElementById(notification.position);
+			if(old_notification!=null){
+				document.body.remove(old_notification);
 			}
+			//	New notification element
+			var new_notification = document.createElement('div');
+			//	Class name
+			new_notification.className = 'notify';
+			//	Unique ID
+			new_notification.id = notification.position;
+			//	Text value
+			new_notification.append(document.createElement('h1'));
 			//	Get the color
 			var c = notification.color;
 			//	Set the color
-			notify_slot.style.color = 'rgb('+c.r*100+'%,'+c.g*100+'%,'+c.b*100+'%)';
-			//	Make it visible
-			notify_slot.style.opacity = 1;
+			new_notification.style.color = 'rgb('+c.r*100+'%,'+c.g*100+'%,'+c.b*100+'%)';
 			//	Set the text value
-			notify_slot.firstElementChild.innerHTML = notification.value;
+			new_notification.firstElementChild.innerHTML = notification.value;
+			//	Add it to the document
+			document.body.appendChild(new_notification);
 		}
 	}
 	else{
