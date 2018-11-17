@@ -20,11 +20,9 @@ notifications[2] = document.getElementById("notify_right");
 //	Fullscreen abilitation
 var enableFullscreen = true;
 //	Statistics
-var stat = document.getElementById("stats");
-stat.style.opacity = 0;
-stat.children[0].innerText = Math.floor(gameScene.points);
-stat.children[1].innerHTML = gameScene.distance.toFixed(2);
-stat.children[2].innerHTML = gameScene.speed.toFixed(2);
+var statistics = document.getElementById("statistics");
+statistics.style.opacity = 0;
+//	Highscore
 var highscore = 0;
 
 //	Bind user events to callback functions
@@ -45,10 +43,10 @@ function bindEventListeners() {
 
 //	Viewable statistics
 function switchStatistics(){
-	if(stat.style.opacity==0)
-		stat.style.opacity = 1;
+	if(statistics.style.opacity==0)
+		statistics.style.opacity = 1;
 	else
-		stat.style.opacity = 0;
+		statistics.style.opacity = 0;
 }
 
 function switchFullscreen(){
@@ -149,9 +147,10 @@ function render() {
 	}
 	
 	//	Statistics
-	stat.children[0].innerText = Math.floor(gameScene.points);
-	stat.children[1].innerHTML = gameScene.distance.toFixed(2);
-	stat.children[2].innerHTML = gameScene.speed.toFixed(2);
+	statistics.innerText = 
+		Math.floor(gameScene.points)+"LP\t"+
+		gameScene.distance.toFixed(2)+"m\t"+
+		gameScene.speed.toFixed(2)+"m/s";
 
 	//	Next iteration
     requestAnimationFrame(render);
