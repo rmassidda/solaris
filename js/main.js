@@ -71,7 +71,15 @@ function OnMouseDown(event){
 		fscreen.requestFullscreen(document.body);
 		resizeCanvas();
 	}
-	gameScene.shoot(mouse);
+	if(gameScene.mode == 'pause'){
+		gameScene.pause();
+	}
+	else if(gameScene.mode == 'play'){
+		gameScene.shoot(mouse);
+	}
+	else{
+		gameScene.start();
+	}
 }
 
 function onResizeListener(event){

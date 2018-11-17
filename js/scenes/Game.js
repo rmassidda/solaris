@@ -326,39 +326,35 @@ class Game {
     }
   }
 
+  start(){
+    //  Modalità di gioco
+    this.mode = "play";
+    //  Punteggio iniziale
+    this.points = start_point;
+    //  Distanza percorsa
+    this.distance = start_distance;
+    this.old_distance = this.distance;
+    //  Velocità
+    this.speed = start_speed;
+    //  Riazzerare orologio
+    this.clock = new THREE.Clock();
+  }
+
   shoot(mouse) {
-    //  Se è stato cliccato da qualche parte si avvia il gioco durante l'introduzione od il gameOver
-    if (this.mode == "intro" || this.mode == "game_over") {
-      //  Modalità di gioco
-      this.mode = "play";
-      //  Punteggio iniziale
-      this.points = start_point;
-      //  Distanza percorsa
-      this.distance = start_distance;
-      this.old_distance = this.distance;
-      //  Velocità
-      this.speed = start_speed;
-      //  Riazzerare orologio
-      this.clock = new THREE.Clock();
-      return;
-    } else if (this.mode == "play") {
-      //  Creazione del proiettile
-      var bullet = new SpaceBullet(
-        mouse.x * this.camera.aspect,
-        mouse.y,
-        this.initial_speed,
-        0,
-        0.5,
-        this.listener
-      );
-      //  Aggiunta alla scena e all'insieme dei proiettili
-      this.scene.add(bullet);
-      this.bullets.push(bullet);
-      //  Perdita di punti #alebiagiotti
-      this.points -= 10;
-    } else if (this.mode == "pause") {
-      this.pause();
-    }
+    //  Creazione del proiettile
+    var bullet = new SpaceBullet(
+      mouse.x * this.camera.aspect,
+      mouse.y,
+      this.initial_speed,
+      0,
+      0.5,
+      this.listener
+    );
+    //  Aggiunta alla scena e all'insieme dei proiettili
+    this.scene.add(bullet);
+    this.bullets.push(bullet);
+    //  Perdita di punti #alebiagiotti
+    this.points -= 10;
   }
 
   onWindowResize() {
