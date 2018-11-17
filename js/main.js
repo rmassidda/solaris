@@ -20,6 +20,7 @@ notifications[2] = document.getElementById("notify_right");
 
 //	Statistics
 var stat = document.getElementById("stats");
+stat.style.opacity = 0;
 stat.children[0].innerText = Math.floor(gameScene.points);
 stat.children[1].innerHTML = gameScene.distance.toFixed(2);
 stat.children[2].innerHTML = gameScene.speed.toFixed(2);
@@ -41,10 +42,19 @@ function bindEventListeners() {
 	document.addEventListener('keydown',onKeyDown,false);
 }
 
+//	Viewable statistics
+function switchStatistics(){
+	if(stat.style.opacity==0)
+		stat.style.opacity = 1;
+	else
+		stat.style.opacity = 0;
+}
+
 function onKeyDown(event){
 	//event.preventDefault();
 	switch(event.key){
-		case " ": gameScene.pause();
+		case " ": gameScene.pause(); break;
+		case "d": switchStatistics(); break;
 	}
 }
 
