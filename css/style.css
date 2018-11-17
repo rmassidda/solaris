@@ -3,7 +3,7 @@ html, body {
     height: 100%;    
     margin: 0;
     background: black;
-    font-family: 'Press Start 2P', cursive;
+    font-family: 'Press Start 2P', Arial, Helvetica, sans-serif;
 }
 #stats {
     position: absolute;

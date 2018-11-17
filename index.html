@@ -1,20 +1,24 @@
 <!DOCTYPE html>
-<html >
+<html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Solaris</title> 		
+		<title>Solaris</title> 
+		<!-- Google Font -->
 		<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
 		<link rel="stylesheet" href="css/style.css"> 
 	</head>
 
 	<body>
 		<canvas id="canvas"></canvas>
+		<!-- Top bar used to display controls -->
 		<div id="bar">
 			<img id="help" src="img/help.png" height="100%">
 			<img id="pause" src="img/pause.png" height="100%">
 			<img id="refresh" src="img/refresh.png" height="100%">
 		</div>
+		<!-- Bottom bar used to display statistics -->
 		<div id="stats">LP: <span id="life_points"></span> <span id="distance"></span>m <span id="speed"></span>m/s</div>
+		<!-- Center title -->
 		<div id="title">
 			<h1 class="title">СОЛЯРИС</h1>
 			<h2 class="title">click anywhere to start</h2>
@@ -23,6 +27,7 @@
 			<h3></h3>
 			<p></p>
 		</div>
+		<!-- Notifications during the game appears here -->
 		<div class="notify" id="notify_left"><h1></h1></div>
 		<div class="notify" id="notify_center"><h1></h1></div>
 		<div class="notify" id="notify_right"><h1></h1></div>
