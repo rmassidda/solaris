@@ -17,7 +17,8 @@ var notifications = [];
 notifications[0]= document.getElementById("notify_left");
 notifications[1] = document.getElementById("notify_center");
 notifications[2] = document.getElementById("notify_right");
-
+//	Fullscreen abilitation
+var enable_fullscreen = true;
 //	Statistics
 var stat = document.getElementById("stats");
 stat.style.opacity = 0;
@@ -50,11 +51,16 @@ function switchStatistics(){
 		stat.style.opacity = 0;
 }
 
+function switchFullscreen(){
+	enable_fullscreen = !enable_fullscreen;
+}
+
 function onKeyDown(event){
 	//event.preventDefault();
 	switch(event.key){
 		case " ": gameScene.pause(); break;
 		case "d": switchStatistics(); break;
+		case "f": switchFullscreen(); break;
 	}
 }
 
@@ -63,8 +69,7 @@ function OnMouseDown(event){
 	var mouse = new THREE.Vector2();
 	mouse.x = ( event.pageX /  window.innerWidth ) * 2 - 1;
 	mouse.y = - ( event.pageY /  window.innerHeight) * 2 + 1;
-	//	TODO: should the game always be fullscreen?
-	if (fscreen.fullscreenElement === null) {
+	if (fscreen.fullscreenElement === null && enable_fullscreen) {
 		fscreen.requestFullscreen(document.body);
 		resizeCanvas();
 	}
