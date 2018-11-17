@@ -24,8 +24,6 @@ stat.children[0].innerText = Math.floor(gameScene.points);
 stat.children[1].innerHTML = gameScene.distance.toFixed(2);
 stat.children[2].innerHTML = gameScene.speed.toFixed(2);
 var highscore = 0;
-//	Giocabilità
-var playable = false;
 
 //	Bind user events to callback functions
 bindEventListeners();
@@ -60,8 +58,7 @@ function OnMouseDown(event){
 		fscreen.requestFullscreen(document.body);
 		resizeCanvas();
 	}
-	if(playable)
-		gameScene.shoot(mouse);
+	gameScene.shoot(mouse);
 }
 
 function onResizeListener(event){
@@ -82,18 +79,8 @@ function render() {
 
 	//	Modalità di gioco
 	if(gameScene.mode == 'play'){
-		//	Se il titolo non è ancora scomparso
-		if(title.style.visibility != 'hidden'){
-			var opacity = parseFloat(title.style.opacity);
-			opacity -= 0.02;
-			if(opacity<=0){
-				title.style.opacity = 0;
-				title.style.visibility = 'hidden';
-			}
-			else{
-				title.style.opacity = opacity;
-			}
-		}
+		title.style.opacity = 0;
+		title.style.animationName = 'disappear';
 		//	Get notification from the game
 		var notification = gameScene.notify.pop();
 		//	If there's some new notification
@@ -121,45 +108,32 @@ function render() {
 			document.body.appendChild(new_notification);
 		}
 	}
-	else{
-		//	Se il titolo non è ancora visibile
-		if(title.style.visibility == 'hidden'){
-			title.style.visibility = 'visible';
-		}
-		var opacity = parseFloat(title.style.opacity);
-		if(opacity<1){
-			playable = false;
-			opacity += 0.01;
-			title.style.opacity = opacity;
-		}
-		if(opacity<=0.5){
-			//	Non si può giocare fin quando il titolo non è ricomparso
-			playable = false;
-		}
-		else{
-			//	Titolo ricomparso si può giocare
-			playable = true;
-		}
-		if(gameScene.mode == 'intro'){
-			title.children[2].innerHTML = 'New Game';
-			title.children[2].style.color = 'green';
-			title.children[3].innerHTML = '';
-			title.children[4].innerHTML = '';
-		}
-		else if(gameScene.mode == 'game_over'){
-			highscore = Math.ceil(Math.max(highscore,gameScene.distance));
-			title.children[2].innerHTML = 'Game Over';
-			title.children[2].style.color = 'red';
-			title.children[3].innerHTML = 'Current score\t'+Math.ceil(gameScene.distance);
-			title.children[4].innerHTML = 'Highscore\t'+highscore;
-		}
-		else if(gameScene.mode == 'pause'){
-			title.children[2].innerHTML = 'Pause';
-			title.children[2].style.color = 'green';
-			title.children[3].innerHTML = 'Current score\t'+Math.ceil(gameScene.distance);
-			title.children[4].innerHTML = 'Highscore\t'+highscore;
-		}
+	else if(gameScene.mode == 'intro'){
+		title.style.animationName = 'appear';
+		title.style.opacity = 1;
+		title.children[2].innerHTML = 'New Game';
+		title.children[2].style.color = 'green';
+		title.children[3].innerHTML = '';
+		title.children[4].innerHTML = '';
 	}
+	else if(gameScene.mode == 'game_over'){
+		title.style.animationName = 'appear';
+		title.style.opacity = 1;
+		highscore = Math.ceil(Math.max(highscore,gameScene.distance));
+		title.children[2].innerHTML = 'Game Over';
+		title.children[2].style.color = 'red';
+		title.children[3].innerHTML = 'Current score\t'+Math.ceil(gameScene.distance);
+		title.children[4].innerHTML = 'Highscore\t'+highscore;
+	}
+	else if(gameScene.mode == 'pause'){
+		title.style.animationName = 'appear';
+		title.style.opacity = 1;
+		title.children[2].innerHTML = 'Pause';
+		title.children[2].style.color = 'green';
+		title.children[3].innerHTML = 'Current score\t'+Math.ceil(gameScene.distance);
+		title.children[4].innerHTML = 'Highscore\t'+highscore;
+	}
+	
 	//	
 	stat.children[0].innerText = Math.floor(gameScene.points);
 	stat.children[1].innerHTML = gameScene.distance.toFixed(2);
