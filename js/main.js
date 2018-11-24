@@ -1,5 +1,6 @@
 import fscreen from  './libs/fscreen/src/index.js'
 import Game from './scenes/Game.js'
+import Swipe from './libs/Swipe.js'
 
 //	Canvas
 const canvas = document.getElementById("canvas");
@@ -18,6 +19,8 @@ statistics.style.opacity = 0;
 var highscore = 0;
 //	Internal status
 var currentStatus;
+//	Swipe
+var swipe;
 
 //	Bind user events to callback functions
 bindEventListeners();
@@ -30,7 +33,9 @@ function bindEventListeners() {
 	//	Auto adjust the window
 	window.addEventListener('resize',onResizeListener,false);
 	//	Click/tap event
-	document.addEventListener('mousedown',OnMouseDown,false);
+	document.addEventListener('mousedown',onMouseDown,false);
+	document.addEventListener('mousemove',onMouseMove,false);
+	document.addEventListener('mouseup',onMouseUp,false);
 	//	Keyboard event
 	document.addEventListener('keydown',onKeyDown,false);
 }
@@ -56,23 +61,46 @@ function onKeyDown(event){
 	}
 }
 
-function OnMouseDown(event){
+function onMouseDown(event){
 	event.preventDefault();
-	var mouse = new THREE.Vector2();
-	mouse.x = ( event.pageX /  window.innerWidth ) * 2 - 1;
-	mouse.y = - ( event.pageY /  window.innerHeight) * 2 + 1;
-	if (fscreen.fullscreenElement === null && enableFullscreen) {
-		fscreen.requestFullscreen(document.body);
-		resizeCanvas();
+	//	Initial conditions to catch swype
+	swipe = new Swipe(event.pageX,event.pageY);
+}
+
+function onMouseMove(event){
+	event.preventDefault();
+}
+
+function onMouseUp(event){
+	event.preventDefault();
+	var swipeDirection = swipe.checkSwipe(event.pageX,event.pageY);
+	if(swipeDirection==null){
+		var mouse = new THREE.Vector2();
+		mouse.x = ( event.pageX /  window.innerWidth ) * 2 - 1;
+		mouse.y = - ( event.pageY /  window.innerHeight) * 2 + 1;
+		if (fscreen.fullscreenElement === null && enableFullscreen) {
+			fscreen.requestFullscreen(document.body);
+			resizeCanvas();
+		}
+		if(currentStatus == 'pause'){
+			gameScene.pause();
+		}
+		else if(currentStatus == 'play'){
+			gameScene.shoot(mouse);
+		}
+		else{
+			gameScene.start();
+		}
 	}
-	if(currentStatus == 'pause'){
+	else if(swipeDirection=='down'){
 		gameScene.pause();
+		swipeDirection = null;
 	}
-	else if(currentStatus == 'play'){
-		gameScene.shoot(mouse);
-	}
-	else{
-		gameScene.start();
+	else if(swipeDirection=='up'){
+		if(currentStatus=='pause'){
+			gameScene.start();
+		}
+		swipeDirection = null;
 	}
 }
 
@@ -160,6 +188,9 @@ function render() {
 				{
 					message: 'New Game',
 					color: 'green'
+				},
+				{
+					message: 'Touch to start, swipe down to pause'
 				}
 			]);
 		}
@@ -183,6 +214,9 @@ function render() {
 				{
 					message: 'Pause',
 					color: 'green'
+				},
+				{
+					message: 'Touch to unpause, swipe up to start new game'
 				},
 				{
 					message: 'Current score\t'+Math.ceil(gameScene.distance)
