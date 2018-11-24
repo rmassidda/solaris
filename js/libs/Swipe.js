@@ -7,7 +7,7 @@ class Swipe{
         this.startY = y;
     }
 
-    checkSwipe(x,y,minDistance = 0.3, maxDistance = 1, timeLimit = 500){
+    checkSwipe(x,y,minDistance = 0.2, maxDistance = 1, timeLimit = 500){
         //  Difference of current and initial condition
         var elapsedTime = new Date().getTime() - this.time;
         var distanceX = this.startX - x;

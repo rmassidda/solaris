@@ -33,10 +33,14 @@ render();
 function bindEventListeners() {
 	//	Auto adjust the window
 	window.addEventListener('resize',onResizeListener,false);
-	//	Click/tap event
+	//	Mouse events
 	document.addEventListener('mousedown',onMouseDown,false);
 	document.addEventListener('mousemove',onMouseMove,false);
 	document.addEventListener('mouseup',onMouseUp,false);
+	//	Touch events
+	document.addEventListener('touchstart',onTouchStart,{passive: false});
+	document.addEventListener('touchmove',onTouchMove,{passive: false});
+	document.addEventListener('touchend',onTouchEnd,{passive: false});
 	//	Keyboard event
 	document.addEventListener('keydown',onKeyDown,false);
 }
@@ -64,20 +68,39 @@ function onKeyDown(event){
 
 function onMouseDown(event){
 	event.preventDefault();
-	//	Initial conditions to catch swype
-	mouse.x = ( event.pageX /  window.innerWidth ) * 2 - 1;
-	mouse.y = - ( event.pageY /  window.innerHeight) * 2 + 1;
+	handleStart(event.pageX,event.pageY);
+}
+function onTouchStart(event){
+	console.log('touchstart');
+	event.preventDefault();
+	handleStart(event.touches[0].pageX,event.touches[0].pageY);
+}
+function handleStart(x,y){
+	mouse.x = ( x / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( y / window.innerHeight) * 2 + 1;
 	swipe = new Swipe(mouse.x,mouse.y);
 }
 
+function onTouchMove(event){
+	console.log('touchmove');
+	event.preventDefault();
+}
 function onMouseMove(event){
 	event.preventDefault();
 }
 
+function onTouchEnd(event){
+	console.log('touchend');
+	event.preventDefault();
+	handleEnd(event.changedTouches[0].pageX,event.changedTouches[0].pageY);
+}
 function onMouseUp(event){
 	event.preventDefault();
-	mouse.x = ( event.pageX /  window.innerWidth ) * 2 - 1;
-	mouse.y = - ( event.pageY /  window.innerHeight) * 2 + 1;
+	handleEnd(event.pageX,event.pageY);
+}
+function handleEnd(x,y){
+	mouse.x = ( x /  window.innerWidth ) * 2 - 1;
+	mouse.y = - ( y /  window.innerHeight) * 2 + 1;
 	var swipeDirection = swipe.checkSwipe(mouse.x,mouse.y);
 	if(swipeDirection==null){
 		if (fscreen.fullscreenElement === null && enableFullscreen) {
