@@ -71,7 +71,6 @@ function onMouseDown(event){
 	handleStart(event.pageX,event.pageY);
 }
 function onTouchStart(event){
-	console.log('touchstart');
 	event.preventDefault();
 	handleStart(event.touches[0].pageX,event.touches[0].pageY);
 }
@@ -82,7 +81,6 @@ function handleStart(x,y){
 }
 
 function onTouchMove(event){
-	console.log('touchmove');
 	event.preventDefault();
 }
 function onMouseMove(event){
@@ -90,7 +88,6 @@ function onMouseMove(event){
 }
 
 function onTouchEnd(event){
-	console.log('touchend');
 	event.preventDefault();
 	handleEnd(event.changedTouches[0].pageX,event.changedTouches[0].pageY);
 }
