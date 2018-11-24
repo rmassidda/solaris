@@ -190,7 +190,7 @@ function render() {
 					color: 'green'
 				},
 				{
-					message: 'Touch to start, swipe down to pause'
+					message: 'Touch to start\nswipe down to pause'
 				}
 			]);
 		}
@@ -216,7 +216,7 @@ function render() {
 					color: 'green'
 				},
 				{
-					message: 'Touch to unpause, swipe up to start new game'
+					message: 'Touch to unpause\nswipe up to start new game'
 				},
 				{
 					message: 'Current score\t'+Math.ceil(gameScene.distance)
