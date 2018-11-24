@@ -21,7 +21,7 @@ var highscore = 0;
 var currentStatus;
 //	Swipe
 var swipe;
-var mouse = new THREE.Vector2();
+var tap = new THREE.Vector2();
 
 //	Bind user events to callback functions
 bindEventListeners();
@@ -75,9 +75,9 @@ function onTouchStart(event){
 	handleStart(event.touches[0].pageX,event.touches[0].pageY);
 }
 function handleStart(x,y){
-	mouse.x = ( x / window.innerWidth ) * 2 - 1;
-	mouse.y = - ( y / window.innerHeight) * 2 + 1;
-	swipe = new Swipe(mouse.x,mouse.y);
+	tap.x = ( x / window.innerWidth ) * 2 - 1;
+	tap.y = - ( y / window.innerHeight) * 2 + 1;
+	swipe = new Swipe(tap.x,tap.y);
 }
 
 function onTouchMove(event){
@@ -96,33 +96,41 @@ function onMouseUp(event){
 	handleEnd(event.pageX,event.pageY);
 }
 function handleEnd(x,y){
-	mouse.x = ( x /  window.innerWidth ) * 2 - 1;
-	mouse.y = - ( y /  window.innerHeight) * 2 + 1;
-	var swipeDirection = swipe.checkSwipe(mouse.x,mouse.y);
+	//	Tap coordinates
+	tap.x = ( x /  window.innerWidth ) * 2 - 1;
+	tap.y = - ( y /  window.innerHeight) * 2 + 1;
+	var swipeDirection = swipe.checkSwipe(tap.x,tap.y);
+	//	Single tap
 	if(swipeDirection==null){
+		//	Fullscreen when clicked
 		if (fscreen.fullscreenElement === null && enableFullscreen) {
 			fscreen.requestFullscreen(document.body);
 			resizeCanvas();
 		}
+		//	Unpause game if paused
 		if(currentStatus == 'pause'){
 			gameScene.pause();
 		}
+		//	Play mode: shoot!
 		else if(currentStatus == 'play'){
-			gameScene.shoot(mouse);
+			gameScene.shoot(tap);
 		}
+		//	Intro/GameOver, start new game
 		else{
 			gameScene.start();
 		}
 	}
+	//	Swipe Down
 	else if(swipeDirection=='down'){
+		//	Pause
 		gameScene.pause();
-		swipeDirection = null;
 	}
+	//	Swipe Up
 	else if(swipeDirection=='up'){
+		//	If the game is paused, new game
 		if(currentStatus=='pause'){
 			gameScene.restart();
 		}
-		swipeDirection = null;
 	}
 }
 
