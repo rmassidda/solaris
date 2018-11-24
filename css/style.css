@@ -13,6 +13,8 @@ html, body {
     margin: 0;
     background: black;
     font-family: 'Press Start 2P', Arial, Helvetica, sans-serif;
+    user-select: none;
+    cursor: crosshair;
 }
 #statistics {
     position: absolute;

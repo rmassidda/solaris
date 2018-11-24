@@ -21,7 +21,7 @@ class Swipe{
         //  Check if a swipe happened
         if(elapsedTime<=timeLimit){
             if(Math.abs(distanceX) >= minDistance && Math.abs(distanceY) <= maxDistance){
-                swipeDirection = (distanceX < 0)? 'left' : 'right';
+                swipeDirection = (distanceX < 0)? 'right' : 'left';
             }
             else if (Math.abs(distanceY) >= minDistance && Math.abs(distanceX) <= maxDistance){
                 swipeDirection = (distanceY < 0)? 'up' : 'down';
