@@ -337,6 +337,13 @@ class Game {
     }
   }
 
+  restart(){
+    this.targets.forEach(target => {
+      target.kill();
+    });
+    this.start();
+  }
+
   start(){
     //  Modalità di gioco
     this.mode = "play";

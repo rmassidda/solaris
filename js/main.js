@@ -21,6 +21,7 @@ var highscore = 0;
 var currentStatus;
 //	Swipe
 var swipe;
+var mouse = new THREE.Vector2();
 
 //	Bind user events to callback functions
 bindEventListeners();
@@ -64,7 +65,9 @@ function onKeyDown(event){
 function onMouseDown(event){
 	event.preventDefault();
 	//	Initial conditions to catch swype
-	swipe = new Swipe(event.pageX,event.pageY);
+	mouse.x = ( event.pageX /  window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.pageY /  window.innerHeight) * 2 + 1;
+	swipe = new Swipe(mouse.x,mouse.y);
 }
 
 function onMouseMove(event){
@@ -73,11 +76,10 @@ function onMouseMove(event){
 
 function onMouseUp(event){
 	event.preventDefault();
-	var swipeDirection = swipe.checkSwipe(event.pageX,event.pageY);
+	mouse.x = ( event.pageX /  window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.pageY /  window.innerHeight) * 2 + 1;
+	var swipeDirection = swipe.checkSwipe(mouse.x,mouse.y);
 	if(swipeDirection==null){
-		var mouse = new THREE.Vector2();
-		mouse.x = ( event.pageX /  window.innerWidth ) * 2 - 1;
-		mouse.y = - ( event.pageY /  window.innerHeight) * 2 + 1;
 		if (fscreen.fullscreenElement === null && enableFullscreen) {
 			fscreen.requestFullscreen(document.body);
 			resizeCanvas();
@@ -98,7 +100,7 @@ function onMouseUp(event){
 	}
 	else if(swipeDirection=='up'){
 		if(currentStatus=='pause'){
-			gameScene.start();
+			gameScene.restart();
 		}
 		swipeDirection = null;
 	}
