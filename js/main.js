@@ -1,7 +1,3 @@
-/*
-	> Variables that refer to HTML elements are declared here.
-	> 
-*/
 import fscreen from  './libs/fscreen/src/index.js'
 
 //	Canvas
@@ -12,11 +8,6 @@ var gameScene = new Game(canvas);
 var title = document.getElementById("title");
 title.style.opacity = 0;
 title.style.visibility = 'visible';
-//	Notify
-var notifications = [];
-notifications[0]= document.getElementById("notify_left");
-notifications[1] = document.getElementById("notify_center");
-notifications[2] = document.getElementById("notify_right");
 //	Fullscreen abilitation
 var enableFullscreen = true;
 //	Statistics
@@ -25,7 +16,7 @@ statistics.style.opacity = 0;
 //	Highscore
 var highscore = 0;
 //	Internal status
-var status;
+var currentStatus;
 
 //	Bind user events to callback functions
 bindEventListeners();
@@ -73,10 +64,10 @@ function OnMouseDown(event){
 		fscreen.requestFullscreen(document.body);
 		resizeCanvas();
 	}
-	if(status == 'pause'){
+	if(currentStatus == 'pause'){
 		gameScene.pause();
 	}
-	else if(status == 'play'){
+	else if(currentStatus == 'play'){
 		gameScene.shoot(mouse);
 	}
 	else{
@@ -156,9 +147,10 @@ function render() {
 		//	Add it to the document
 		document.body.appendChild(new_notification);
 	}
-	var tmpStatus = gameScene.status.pop();
-	if(tmpStatus!=null){
-		status = tmpStatus;
+
+	var status = gameScene.status.pop();
+	//	If there's a status change
+	if(status!=null){
 		if(status=='play'){
 			titleDisappear();
 		}
@@ -199,6 +191,7 @@ function render() {
 				}
 			])
 		}
+		currentStatus = status;
 	}
 
 	//	Statistics
