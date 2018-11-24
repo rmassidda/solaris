@@ -86,3 +86,5 @@ class SpaceSpecialTarget extends THREE.Mesh {
 		return this.position.z;
 	}
 }
+
+export default SpaceSpecialTarget;

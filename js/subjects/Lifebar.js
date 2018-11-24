@@ -1,4 +1,4 @@
-class Bar extends THREE.Mesh {
+class Lifebar extends THREE.Mesh {
   constructor(initial, limit, stack) {
     super(
       new THREE.PlaneBufferGeometry(1, 0.05),
@@ -22,3 +22,5 @@ class Bar extends THREE.Mesh {
     this.position.x = -(1 - this.scale.x) / 2;
   }
 }
+
+export default Lifebar;

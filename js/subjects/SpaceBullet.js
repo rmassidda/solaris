@@ -47,3 +47,5 @@ class SpaceBullet extends THREE.Mesh {
     return this.position.z;
   }
 }
+
+export default SpaceBullet;

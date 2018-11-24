@@ -1,3 +1,9 @@
+import Lifebar from '../subjects/Lifebar.js'
+import SpaceBullet from '../subjects/SpaceBullet.js'
+import SpaceObject from '../subjects/SpaceObject.js'
+import SpaceSpecialTarget from '../subjects/SpaceSpecialTarget.js'
+import SpaceTarget from '../subjects/SpaceTarget.js'
+
 const start_point = 3000;
 const start_distance = 0;
 const start_speed = 100;
@@ -68,7 +74,7 @@ class Game {
     //  Luci
     this.scene.add(new THREE.PointLight(0xffffff, 1, 1000));
     //  Barre
-    this.lifebar = new Bar(this.points, start_point, 1);
+    this.lifebar = new Lifebar(this.points, start_point, 1);
     this.scene.add(this.lifebar);
     //  Oggetti
     this.bullets = [];
@@ -372,3 +378,5 @@ class Game {
     this.renderer.setSize(width, height);
   }
 }
+
+export default Game;
