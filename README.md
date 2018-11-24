@@ -9,7 +9,7 @@ Try to catch them and see how far you can travel!
 
 ## Let's get technical!
 
-This software has been developed as the final project of the Interface Programming course at the [University of Pisa](https://www.di.unipi.it/). I've been trying to use all of the knowledge I absorbed during the lessons.
+This software has been developed as the final project of the Interface Programming course at the [University of Pisa](https://www.di.unipi.it/). 
 
 ## How to run
 A quick way to run a web server is using *SimpleHTTPServer*
