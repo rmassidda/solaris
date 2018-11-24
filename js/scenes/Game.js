@@ -29,6 +29,8 @@ class Game {
   constructor(canvas) {
     //  Modalità
     this.mode = "intro";
+    this.status = [];
+    this.status.push(this.mode);
     //  Canvas
     this.canvas = canvas;
     this.stop = false;
@@ -159,6 +161,7 @@ class Game {
         this.points = 0;
         //  Game Over
         this.mode = "game_over";
+        this.status.push(this.mode);
       }
     }
     if (this.mode == "game_over" || this.mode == "intro") {
@@ -319,9 +322,11 @@ class Game {
   pause() {
     if (this.mode == "pause") {
       this.mode = "play";
+      this.status.push(this.mode);
       this.clock.start();
     } else if (this.mode == "play") {
       this.mode = "pause";
+      this.status.push(this.mode);
       this.clock.stop();
     }
   }
@@ -329,6 +334,7 @@ class Game {
   start(){
     //  Modalità di gioco
     this.mode = "play";
+    this.status.push(this.mode);
     //  Punteggio iniziale
     this.points = start_point;
     //  Distanza percorsa

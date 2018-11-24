@@ -24,6 +24,8 @@ var statistics = document.getElementById("statistics");
 statistics.style.opacity = 0;
 //	Highscore
 var highscore = 0;
+//	Internal status
+var status;
 
 //	Bind user events to callback functions
 bindEventListeners();
@@ -71,10 +73,10 @@ function OnMouseDown(event){
 		fscreen.requestFullscreen(document.body);
 		resizeCanvas();
 	}
-	if(gameScene.mode == 'pause'){
+	if(status == 'pause'){
 		gameScene.pause();
 	}
-	else if(gameScene.mode == 'play'){
+	else if(status == 'play'){
 		gameScene.shoot(mouse);
 	}
 	else{
@@ -94,66 +96,111 @@ function resizeCanvas() {
     gameScene.onWindowResize();
 }
 
+function titleDisappear(){
+	//	Start animation
+	title.style.animationName = 'disappear';
+	title.style.opacity = 0;
+}
+
+function titleAppear(strings){
+	//	Start animation
+	title.style.animationName = 'appear';
+	title.style.opacity = 1;
+	//	Subtitle
+	var subtitle = document.getElementById('subtitle');
+	//	Remove old childs
+	while(subtitle.firstChild){
+		subtitle.removeChild(subtitle.firstChild);
+	}
+	//	Add messages
+	strings.forEach(element => {
+		//	HTML Tag
+		var new_message = document.createElement('h3');
+		//	Message
+		new_message.innerText = element.message;
+		//	Color
+		if(element.color != null){
+			new_message.style.color = element.color;
+		}
+		//	Add to DOM
+		subtitle.appendChild(new_message);
+	});
+}
+
 function render() {
 	//	Update objects
 	gameScene.update();
 
-	//	Play!
-	if(gameScene.mode == 'play'){
-		title.style.opacity = 0;
-		title.style.animationName = 'disappear';
-		//	Get notification from the game
-		var notification = gameScene.notify.pop();
-		//	If there's some new notification
-		if(notification!=null){
-			//	Remove old notification (if present)
-			var old_notification = document.getElementById(notification.position);
-			if(old_notification!=null){
-				document.body.removeChild(old_notification);
-			}
-			//	New notification element
-			var new_notification = document.createElement('h1');
-			//	Class name
-			new_notification.className = 'notify';
-			//	Unique ID
-			new_notification.id = notification.position;
-			//	Get the color
-			var c = notification.color;
-			//	Set the color
-			new_notification.style.color = 'rgb('+c.r*100+'%,'+c.g*100+'%,'+c.b*100+'%)';
-			//	Set opacity to zero, this is the value at the end of the animation
-			new_notification.style.opacity = 0;
-			//	Set the text value
-			new_notification.innerText = notification.value;
-			//	Add it to the document
-			document.body.appendChild(new_notification);
+	var notification = gameScene.notify.pop();
+	//	If there's some new notification
+	if(notification!=null){
+		//	Remove old notification (if present)
+		var old_notification = document.getElementById(notification.position);
+		if(old_notification!=null){
+			document.body.removeChild(old_notification);
 		}
+		//	New notification element
+		var new_notification = document.createElement('h1');
+		//	Class name
+		new_notification.className = 'notify';
+		//	Unique ID
+		new_notification.id = notification.position;
+		//	Get the color
+		var c = notification.color;
+		//	Set the color
+		new_notification.style.color = 'rgb('+c.r*100+'%,'+c.g*100+'%,'+c.b*100+'%)';
+		//	Set opacity to zero, this is the value at the end of the animation
+		new_notification.style.opacity = 0;
+		//	Set the text value
+		new_notification.innerText = notification.value;
+		//	Add it to the document
+		document.body.appendChild(new_notification);
 	}
-	else{ 
-		// Make the menu visible
-		title.style.animationName = 'appear';
-		title.style.opacity = 1;
-		if(gameScene.mode == 'intro'){
-			title.children[2].innerHTML = 'New Game';
-			title.children[2].style.color = 'green';
-			title.children[3].innerHTML = '';
-			title.children[4].innerHTML = '';
+	var tmpStatus = gameScene.status.pop();
+	if(tmpStatus!=null){
+		status = tmpStatus;
+		if(status=='play'){
+			titleDisappear();
 		}
-		else if(gameScene.mode == 'game_over'){
+		else if(status== 'intro'){
+			titleAppear([
+				{
+					message: 'New Game',
+					color: 'green'
+				}
+			]);
+		}
+		else if(status == 'game_over'){
 			highscore = Math.ceil(Math.max(highscore,gameScene.distance));
-			title.children[2].innerHTML = 'Game Over';
-			title.children[2].style.color = 'red';
-			title.children[3].innerHTML = 'Current score\t'+Math.ceil(gameScene.distance);
-			title.children[4].innerHTML = 'Highscore\t'+highscore;
+			titleAppear([
+				{
+					message: 'Game Over',
+					color: 'red'
+				},
+				{
+					message: 'Current score\t'+Math.ceil(gameScene.distance)
+				},
+				{
+					message: 'Highscore\t'+highscore
+				}
+			])
 		}
-		else if(gameScene.mode == 'pause'){
-			title.children[2].innerHTML = 'Pause';
-			title.children[2].style.color = 'green';
-			title.children[3].innerHTML = 'Current score\t'+Math.ceil(gameScene.distance);
-			title.children[4].innerHTML = 'Highscore\t'+highscore;
+		else if(status == 'pause'){
+			titleAppear([
+				{
+					message: 'Pause',
+					color: 'green'
+				},
+				{
+					message: 'Current score\t'+Math.ceil(gameScene.distance)
+				},
+				{
+					message: 'Highscore\t'+highscore
+				}
+			])
 		}
 	}
-	
+
 	//	Statistics
 	statistics.innerText = 
 		Math.floor(gameScene.points)+"LP\t"+
