@@ -7,6 +7,7 @@ import SpaceTarget from '../subjects/SpaceTarget.js'
 const start_point = 3000;
 const start_distance = 0;
 const start_speed = 100;
+const start_acceleration = 2;
 
 class Game {
   constructor(canvas) {
@@ -96,26 +97,26 @@ class Game {
   }
 
   _initialize(){
-    //  Orologio di gioco
+    //  Game Clock
     this.clock = new THREE.Clock();
     this.deltaTime = 0;
+    //  Time since last "Out Of Fuel" notification
     this.deltaOutOfFuel = 0;
+    //  Time since last taget generation
     this.deltaGenerate = 0;
-    //  Punteggio iniziale
+    //  Time since last distance sign
+    this.deltaSign = 0;
+    //  Initial data
     this.points = start_point;
-    //  Distanza percorsa
     this.distance = start_distance;
-    this.sign = 1;
-    //  Velocità
-    this.initial_speed = start_speed;
     this.speed = start_speed;
-    //  Accelerazione
-    this.acceleration = 2;
+    this.acceleration = start_acceleration;
   }
 
   update() {
     // Elapsed time
     this.deltaTime = this.clock.getDelta();
+    this.deltaSign += this.deltaTime;
     this.deltaOutOfFuel += this.deltaTime;
     this.deltaGenerate += this.deltaTime;
     //  Play state
@@ -126,13 +127,13 @@ class Game {
       //  Decrease player's points
       this.points -= (this.deltaTime * this.speed) / 2;
       //  Notification that a certain distance has been passed
-      if (this.distance >= 1000 * this.sign) {
+      if (this.deltaSign >= this.speed/100) {
         this.notify.push({
           color: { r: 0, g: 1, b: 0 },
-          value: 1000 * this.sign + "!",
+          value: Math.floor(this.distance) + "!",
           position: "left"
         });
-        this.sign++;
+        this.deltaSign = 0;
       }
       //  The game is going to end in five seconds.
       if (this.points <= (this.speed + this.acceleration * 5) * 5){
@@ -301,7 +302,7 @@ class Game {
     var bullet = new SpaceBullet(
       mouse.x * this.camera.aspect,
       mouse.y,
-      this.initial_speed,
+      start_speed,
       0,
       0.5,
       this.listener
