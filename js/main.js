@@ -117,7 +117,7 @@ function handleEnd(x,y){
 		}
 		//	Intro/GameOver, start new game
 		else{
-			gameScene.start();
+			gameScene.play();
 		}
 	}
 	//	Swipe Down

@@ -12,7 +12,6 @@ class Game {
   constructor(canvas) {
     //  Canvas
     this.canvas = canvas;
-    this.stop = false;
     //  Oggetti fondamentali per il rendering
     this.scene = this._buildScene();
     this.renderer = this._buildRender();
@@ -30,35 +29,23 @@ class Game {
       sound.setVolume(0.7);
       sound.play();
     });
-    //  Orologio di gioco
-    this.clock = new THREE.Clock();
-    this.deltaTime = 0;
-    //  Punteggio iniziale
-    this.points = start_point;
-    //  Distanza percorsa
-    this.distance = start_distance;
-    this.old_distance = this.distance;
-    this.sign = 1;
-    //  Velocità
-    this.initial_speed = start_speed;
-    this.speed = start_speed;
-    //  Accelerazione
-    this.acceleration = 2;
-    //  Luci
+    this._initialize();
+    //  Light
     this.scene.add(new THREE.PointLight(0xffffff, 1, 1000));
-    //  Barre
+    //  Lifebar
     this.lifebar = new Lifebar(this.points, start_point, 1);
     this.scene.add(this.lifebar);
-    //  Oggetti
+    //  Game objects
     this.bullets = [];
     this.targets = [];
     this.ambient = [];
-    //  Notifiche
-    this.notify = [];
     this.to_remove = new Set();
+    //  Notifications
+    this.notify = [];
     //  Game state
-    this.currentState = 'intro';
-    this.stateStack = [this.currentState];
+    this.currentState = '';
+    this.stateStack = [];
+    this._updateCurrentState('intro');
   }
 
   _buildScene() {
@@ -100,17 +87,36 @@ class Game {
     this.stateStack.push(state);
   }
 
+  _initialize(){
+    //  Orologio di gioco
+    this.clock = new THREE.Clock();
+    this.deltaTime = 0;
+    this.deltaOutOfFuel = 0;
+    //  Punteggio iniziale
+    this.points = start_point;
+    //  Distanza percorsa
+    this.distance = start_distance;
+    this.old_distance = this.distance;
+    this.sign = 1;
+    //  Velocità
+    this.initial_speed = start_speed;
+    this.speed = start_speed;
+    //  Accelerazione
+    this.acceleration = 2;
+  }
+
   update() {
-    //  Tempo passato dall'ultima misurazione
+    // Elapsed time
     this.deltaTime = this.clock.getDelta();
-    //  Se in modalità di gioco aggiornamento delle statistiche
-    if (this.currentState == "play") {
-      //  Distanza percorsa
+    this.deltaOutOfFuel += this.deltaTime;
+    //  Play state
+    if (this.currentState == 'play') {
+      //  Update game data
       this.distance += this.speed * this.deltaTime;
-      //  Velocità
       this.speed += this.acceleration * this.deltaTime;
-      //  Aggiornamento del punteggio
+      //  Decrease player's points
       this.points -= (this.deltaTime * this.speed) / 2;
+      //  Notification that a certain distance has been passed
       if (this.distance >= 1000 * this.sign) {
         this.notify.push({
           color: { r: 0, g: 1, b: 0 },
@@ -119,29 +125,21 @@ class Game {
         });
         this.sign++;
       }
-      //  TODO: Il 100 della probabilità deve diminuire all'aumentare della velocità
-      //          così come i 100 punti
-      //  Quando si entra negli ultimi cinque secondi di gioco
-      //  si segnala l'imminente pericolo all'utente
-      //      calcolo della soglia di this.points
-      //  La notifica deve apparire ogni secondo
-      //      calcolo della soglia di Math.random()??
-      //      forse sarebbe meglio usare una soglia rispetto alla distanza!
-      //      Si genera una pallina ogni due metri, ci vorrebbe un getDelta distance,
-      //      allora stesso tempo si genera una notifica ogni secondo in base ad un accumulatore
-      if (
-        this.points <= (this.speed + this.acceleration * 5) * 5 &&
-        this.distance - this.old_distance > 100
-      ) {
-        this.notify.push({
-          color: {
-            r: 1,
-            g: 0.1,
-            b: 0.1
-          },
-          value: "OUT\nOF\nFUEL\n",
-          position: "right"
-        });
+      //  The game is going to end in five seconds.
+      if (this.points <= (this.speed + this.acceleration * 5) * 5){
+        //  The notification has been sent more than a second ago
+        if(this.deltaOutOfFuel > 1){
+          this.notify.push({
+            color: {
+              r: 1,
+              g: 0.1,
+              b: 0.1
+            },
+            value: "OUT\nOF\nFUEL\n",
+            position: "right"
+          });
+          this.deltaOutOfFuel = 0;
+        }
       }
       if (this.points <= 0) {
         //  Zero Punti
@@ -315,25 +313,20 @@ class Game {
     }
   }
 
-  restart(){
+  end(){
     this.targets.forEach(target => {
       target.kill();
     });
-    this.start();
   }
 
-  start(){
-    //  Modalità di gioco
+  restart(){
+    this.end();
+    this.play();
+  }
+
+  play(){
+    this._initialize();
     this._updateCurrentState('play');
-    //  Punteggio iniziale
-    this.points = start_point;
-    //  Distanza percorsa
-    this.distance = start_distance;
-    this.old_distance = this.distance;
-    //  Velocità
-    this.speed = start_speed;
-    //  Riazzerare orologio
-    this.clock = new THREE.Clock();
   }
 
   shoot(mouse) {
