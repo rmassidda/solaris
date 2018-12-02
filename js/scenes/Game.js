@@ -1,7 +1,6 @@
 import Lifebar from '../subjects/Lifebar.js'
 import SpaceBullet from '../subjects/SpaceBullet.js'
 import SpaceObject from '../subjects/SpaceObject.js'
-import SpaceSpecialTarget from '../subjects/SpaceSpecialTarget.js'
 import SpaceTarget from '../subjects/SpaceTarget.js'
 
 const start_point = 3000;
@@ -105,7 +104,7 @@ class Game {
     //  Time since last taget generation
     this.deltaGenerate = 0;
     //  Time since last distance sign
-    this.deltaSign = 0;
+    //  this.deltaSign = 0;
     //  Initial data
     this.points = start_point;
     this.distance = start_distance;
@@ -116,7 +115,7 @@ class Game {
   update() {
     // Elapsed time
     this.deltaTime = this.clock.getDelta();
-    this.deltaSign += this.deltaTime;
+    //this.deltaSign += this.deltaTime;
     this.deltaOutOfFuel += this.deltaTime;
     this.deltaGenerate += this.deltaTime;
     //  Play state
@@ -127,14 +126,14 @@ class Game {
       //  Decrease player's points
       this.points -= (this.deltaTime * this.speed) / 2;
       //  Notification that a certain distance has been passed
-      if (this.deltaSign >= this.speed/100) {
+      /*if (this.deltaSign >= this.speed/100) {
         this.notify.push({
           color: { r: 0, g: 1, b: 0 },
           value: Math.floor(this.distance) + "!",
           position: "left"
         });
         this.deltaSign = 0;
-      }
+      }*/
       //  The game is going to end in five seconds.
       if (this.points <= (this.speed + this.acceleration * 5) * 5){
         //  The notification has been sent more than a second ago
