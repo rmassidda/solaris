@@ -7,30 +7,7 @@ import SpaceTarget from '../subjects/SpaceTarget.js'
 const start_point = 3000;
 const start_distance = 0;
 const start_speed = 100;
-/*
-    TODO:
-        Tech
-            Controllare il consumo di memoria, improvvisi lag sospetti nel sistema.
-            Unselectable notify
-            Verificare la potenziale aggiunta di sensori (accelerometro) e controlli come drag&drop.
-            Aggiustare il path come su altervista.org
-            Controlli per il volume
 
-        Game:
-            Studiare eventuali effetti aggiuntivi oltre al punteggio in più.
-            Importazione di modelli 3D esterni ogni tanto e per rompere monotonia.
-            Variazioni delle sfere (malus, velocità, surriscaldamento dell'arma)
-            (Cruscotto in trasparenza con i comandi al posto degli indicatori arcade)
-            Surriscaldamento dei proiettili anziché limite numerico.
-            Diversificazione dell'effetto morte della pallina.
-            Boss che segue il movimento in profondità del giocatore e che si muove all'interno del piano 2D
-            necessità di un tot di colpi fissato per eliminarlo  (aumentando in là col tempo)
-            effetto colpito rosso
-        Meme:
-            Gattini su Salvini The Game
-        
-        
-*/
 class Game {
   constructor(canvas) {
     //  Modalità
