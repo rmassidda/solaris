@@ -10,10 +10,6 @@ const start_speed = 100;
 
 class Game {
   constructor(canvas) {
-    //  Modalità
-    this.mode = "intro";
-    this.status = [];
-    this.status.push(this.mode);
     //  Canvas
     this.canvas = canvas;
     this.stop = false;
@@ -60,6 +56,9 @@ class Game {
     //  Notifiche
     this.notify = [];
     this.to_remove = new Set();
+    //  Game state
+    this.currentState = 'intro';
+    this.stateStack = [this.currentState];
   }
 
   _buildScene() {
@@ -96,11 +95,16 @@ class Game {
     return camera;
   }
 
+  _updateCurrentState(state){
+    this.currentState = state;
+    this.stateStack.push(state);
+  }
+
   update() {
     //  Tempo passato dall'ultima misurazione
     this.deltaTime = this.clock.getDelta();
     //  Se in modalità di gioco aggiornamento delle statistiche
-    if (this.mode == "play") {
+    if (this.currentState == "play") {
       //  Distanza percorsa
       this.distance += this.speed * this.deltaTime;
       //  Velocità
@@ -143,17 +147,16 @@ class Game {
         //  Zero Punti
         this.points = 0;
         //  Game Over
-        this.mode = "game_over";
-        this.status.push(this.mode);
+        this._updateCurrentState('game_over');
       }
     }
-    if (this.mode == "game_over" || this.mode == "intro") {
+    if (this.currentState == "game_over" || this.currentState == "intro") {
       //  Terminazione dei target restanti
       this.targets.forEach(target => {
         target.kill();
       });
     }
-    if (this.mode != "pause") {
+    if (this.currentState != "pause") {
       //  Ambient Object
       var n, aX, bX, aY, bY, x, y, obj;
       n = Math.floor(Math.random() * 2);
@@ -178,7 +181,7 @@ class Game {
       //  Probabilità uniforme 1/100 che durante un frame sia generato un oggetto
       if (
         this.distance - this.old_distance > this.speed &&
-        this.mode == "play"
+        this.currentState == "play"
       ) {
         //  Scelta del tipo di oggetto
         /*
@@ -303,13 +306,11 @@ class Game {
 
   //  Messa in pausa del gioco
   pause() {
-    if (this.mode == "pause") {
-      this.mode = "play";
-      this.status.push(this.mode);
+    if (this.currentState == "pause") {
+      this._updateCurrentState('play');
       this.clock.start();
-    } else if (this.mode == "play") {
-      this.mode = "pause";
-      this.status.push(this.mode);
+    } else if (this.currentState == "play") {
+      this._updateCurrentState('pause');
       this.clock.stop();
     }
   }
@@ -323,8 +324,7 @@ class Game {
 
   start(){
     //  Modalità di gioco
-    this.mode = "play";
-    this.status.push(this.mode);
+    this._updateCurrentState('play');
     //  Punteggio iniziale
     this.points = start_point;
     //  Distanza percorsa

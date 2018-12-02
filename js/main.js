@@ -17,8 +17,8 @@ var statistics = document.getElementById("statistics");
 statistics.style.opacity = 0;
 //	Highscore
 var highscore = 0;
-//	Internal status
-var currentStatus;
+//	Internal state
+var currentState;
 //	Swipe
 var swipe;
 var tap = new THREE.Vector2();
@@ -26,7 +26,7 @@ var tap = new THREE.Vector2();
 //	Bind user events to callback functions
 bindEventListeners();
 //	First resize of the canvas
-resizeCanvas();	
+resizeCanvas();
 //	Start of the game loop
 render();
 
@@ -108,11 +108,11 @@ function handleEnd(x,y){
 			resizeCanvas();
 		}
 		//	Unpause game if paused
-		if(currentStatus == 'pause'){
+		if(currentState == 'pause'){
 			gameScene.pause();
 		}
 		//	Play mode: shoot!
-		else if(currentStatus == 'play'){
+		else if(currentState == 'play'){
 			gameScene.shoot(tap);
 		}
 		//	Intro/GameOver, start new game
@@ -128,7 +128,7 @@ function handleEnd(x,y){
 	//	Swipe Up
 	else if(swipeDirection=='up'){
 		//	If the game is paused, new game
-		if(currentStatus=='pause'){
+		if(currentState=='pause'){
 			gameScene.restart();
 		}
 	}
@@ -207,13 +207,13 @@ function render() {
 		document.body.appendChild(new_notification);
 	}
 
-	var status = gameScene.status.pop();
-	//	If there's a status change
-	if(status!=null){
-		if(status=='play'){
+	var state = gameScene.stateStack.pop();
+	//	If there's a state change
+	if(state!=null){
+		if(state=='play'){
 			titleDisappear();
 		}
-		else if(status== 'intro'){
+		else if(state== 'intro'){
 			titleAppear([
 				{
 					message: 'New Game',
@@ -224,7 +224,7 @@ function render() {
 				}
 			]);
 		}
-		else if(status == 'game_over'){
+		else if(state == 'game_over'){
 			highscore = Math.ceil(Math.max(highscore,gameScene.distance));
 			titleAppear([
 				{
@@ -239,7 +239,7 @@ function render() {
 				}
 			])
 		}
-		else if(status == 'pause'){
+		else if(state == 'pause'){
 			titleAppear([
 				{
 					message: 'Pause',
@@ -256,11 +256,11 @@ function render() {
 				}
 			])
 		}
-		currentStatus = status;
+		currentState = state;
 	}
 
 	//	Statistics
-	statistics.innerText = 
+	statistics.innerText =
 		Math.floor(gameScene.points)+"LP\t"+
 		gameScene.distance.toFixed(2)+"m\t"+
 		gameScene.speed.toFixed(2)+"m/s";
