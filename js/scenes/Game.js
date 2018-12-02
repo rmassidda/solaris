@@ -89,6 +89,7 @@ class Game {
     });
     return sound;
   }
+
   _updateCurrentState(state){
     this.currentState = state;
     this.stateStack.push(state);
@@ -99,11 +100,11 @@ class Game {
     this.clock = new THREE.Clock();
     this.deltaTime = 0;
     this.deltaOutOfFuel = 0;
+    this.deltaGenerate = 0;
     //  Punteggio iniziale
     this.points = start_point;
     //  Distanza percorsa
     this.distance = start_distance;
-    this.old_distance = this.distance;
     this.sign = 1;
     //  Velocità
     this.initial_speed = start_speed;
@@ -116,6 +117,7 @@ class Game {
     // Elapsed time
     this.deltaTime = this.clock.getDelta();
     this.deltaOutOfFuel += this.deltaTime;
+    this.deltaGenerate += this.deltaTime;
     //  Play state
     if (this.currentState == 'play') {
       //  Update game data
@@ -148,19 +150,91 @@ class Game {
           this.deltaOutOfFuel = 0;
         }
       }
+      //  The last element has been generated more than a second ago
+      if (this.deltaGenerate > 1 ) {
+        //  Random type
+        var choice = Math.random();
+        var type = "";
+        if (choice <= 0.5){
+          type = "alfa";
+        } else if (choice <= 0.8) {
+          type = "beta";
+        } else if (choice <= 0.95) {
+          type = "gamma";
+        } else {
+          type = "delta";
+        }
+        //  Space coordinates
+        let aX = -this.camera.aspect * 10; // this.canvas.width / 100;
+        let bX = -aX;
+        let aY = -10; //this.canvas.height / 100;
+        let bY = -aY;
+        let x = aX + (bX - aX) * Math.random();
+        let y = aY + (bY - aY) * Math.random();
+        var obj = new SpaceTarget(
+          x,
+          y,
+          this.speed / 4,
+          this.acceleration,
+          type,
+          this.listener
+        );
+        //  Add to targets
+        this.targets.push(obj);
+        this.scene.add(obj);
+        this.deltaGenerate = 0;
+      }
+      //  Update bullets position and detect collisions
+      this.bullets.forEach(bullet =>{
+        //  Update position
+        if(bullet.update(this.deltaTime) < -200){
+            bullet.mute();
+            this.to_remove.add(bullet);
+        }
+        else{
+          //  Ray caster to detect collision
+          let raycaster = new THREE.Raycaster(bullet.position, bullet.direction,0,10);
+          let intersects = raycaster.intersectObjects(this.targets, false);
+          if (intersects.length > 0) {
+            //  If the object isn't already been hitten
+            if (!intersects[0].object.hitten) {
+              //  Hit it!
+              intersects[0].object.hit();
+              //  Achieve bonus
+              this.points += intersects[0].object.bonus;
+              //  Remove bullet
+              bullet.mute();
+              this.to_remove.add(bullet);
+              //  Notification
+              this.notify.push({
+                color: intersects[0].object.material.color,
+                value: intersects[0].object.bonus,
+                position: "center"
+              });
+            }
+          }
+        }
+      });
+      //  Max points
+      if (this.points > start_point) {
+        this.points = start_point;
+      }
+      //  Game Over
       if (this.points <= 0) {
-        //  Zero Punti
         this.points = 0;
-        //  Game Over
         this._updateCurrentState('game_over');
+        this.end();
       }
     }
-    if (this.currentState == "game_over" || this.currentState == "intro") {
-      this.end();
-    }
     if (this.currentState != "pause") {
+      //  Let the targets die
+      this.targets.forEach(target =>{
+        if(target.update(this.deltaTime)>0||target.dead){
+          this.to_remove.add(target);
+        }
+      });
       //  Ambient Object
-      var n, aX, bX, aY, bY, x, y, obj;
+      let n, aX, bX, aY, bY, x, y, obj;
       n = Math.floor(Math.random() * 2);
       aX = -this.canvas.width / 2;
       bX = -aX;
@@ -173,136 +247,23 @@ class Game {
         this.ambient.push(obj);
         this.scene.add(obj);
       }
-      //  Spostamento degli oggetti ambientali
-      for (let i = 0; i < this.ambient.length; i++) {
-        //  Oggetto non visibile da rimuovere
-        if (this.ambient[i].update(this.deltaTime) > 0) {
-          this.to_remove.add(this.ambient[i]);
+      this.ambient.forEach(object =>{
+        if(object.update(this.deltaTime)>0){
+          this.to_remove.add(this.object);
         }
-      }
-      //  Probabilità uniforme 1/100 che durante un frame sia generato un oggetto
-      if (
-        this.distance - this.old_distance > this.speed &&
-        this.currentState == "play"
-      ) {
-        //  Scelta del tipo di oggetto
-        /*
-                ALFA:   50%
-                BETA:   30%
-                GAMMA:  15%
-                DELTA:  5%
-                */
-        var choice = Math.random();
-        var type = "";
-        if (choice <= 0.5) {
-          type = "alfa";
-        } else if (choice <= 0.8) {
-          type = "beta";
-        } else if (choice <= 0.95) {
-          type = "gamma";
-        } else {
-          type = "delta";
-        }
-        //  Y tra -1 e 1
-        //  X tra -ratio + ratio
-        aX = -this.camera.aspect * 10; // this.canvas.width / 100;
-        bX = -aX;
-        aY = -10; //this.canvas.height / 100;
-        bY = -aY;
-        x = aX + (bX - aX) * Math.random();
-        y = aY + (bY - aY) * Math.random();
-        if (Math.random() < 0.5)
-          obj = new SpaceTarget(
-            x,
-            y,
-            this.speed / 4,
-            this.acceleration,
-            type,
-            this.listener
-          );
-        else
-          obj = new SpaceTarget(
-            x,
-            y,
-            this.speed / 4,
-            this.acceleration,
-            type,
-            this.listener
-          );
-        this.targets.push(obj);
-        this.scene.add(obj);
-        this.old_distance = this.distance;
-      }
-      //  Spostamento degli oggetti di gioco
-      for (let i = 0; i < this.targets.length; i++) {
-        //  Oggetto non visibile da rimuovere
-        if (
-          this.targets[i].update(this.deltaTime) > 0 ||
-          this.targets[i].dead
-        ) {
-          this.to_remove.add(this.targets[i]);
-        }
-      }
-      //  Spostamento dei proiettili
-      for (let i = 0; i < this.bullets.length; i++) {
-        var bullet = this.bullets[i];
-        //  Aggiornamento della posizione
-        bullet.update(this.deltaTime);
-        //  Eventuale collisione
-        //  Distanza telecamera oggetto
-        //  TODO: Valore di far = 10 trovato sperimentalmente, giustificazione teorica?
-        var raycaster = new THREE.Raycaster(
-          bullet.position,
-          bullet.direction,
-          0,
-          10
-        );
-        //  Il raggio interseca un qualche target?
-        var intersects = raycaster.intersectObjects(this.targets, false);
-        if (intersects.length > 0) {
-          //  Se l'oggetto non è già stato colpito
-          if (!intersects[0].object.die) {
-            //  Azione sull'oggetto
-            intersects[0].object.kill();
-            //  Aumento del punteggio
-            this.points += intersects[0].object.bonus;
-            //  Il punteggio ha un massimo
-            if (this.points > start_point) {
-              this.points = start_point;
-            }
-            //  Rimozione del proiettile
-            bullet.mute();
-            this.to_remove.add(bullet);
-
-            //  Notifica
-            this.notify.push({
-              color: intersects[0].object.material.color,
-              value: intersects[0].object.bonus,
-              position: "center"
-            });
-          }
-        }
-
-        //  Se il proiettile non è più visibile viene rimosso
-        if (bullet.position.z < -200) {
-          bullet.mute();
-          this.to_remove.add(bullet);
-        }
-      }
+      });
     }
 
-    //  Aggiornamento della lifebar
+    //  Lifebar update
     this.lifebar.update(this.points);
-    //  Rimozione degli oggetti non più visibili
+    //  Cleaning
     this.ambient = this.ambient.filter(obj => !this.to_remove.has(obj));
     this.bullets = this.bullets.filter(obj => !this.to_remove.has(obj));
     this.targets = this.targets.filter(obj => !this.to_remove.has(obj));
-    this.scene.children = this.scene.children.filter(
-      obj => !this.to_remove.has(obj)
-    );
-    //  Azzeramento dell'insieme
+    this.scene.children = this.scene.children.filter(obj => !this.to_remove.has(obj));
+    //  Empty set
     this.to_remove.clear();
-    //  Render della scena
+    //  Render
     this.renderer.render(this.scene, this.camera);
   }
 
@@ -324,7 +285,9 @@ class Game {
 
   end(){
     this.targets.forEach(target => {
-      target.kill();
+      if(!target.hitten){
+        target.hit();
+      }
     });
   }
 

@@ -39,7 +39,7 @@ class SpaceTarget extends THREE.Mesh {
 		//	Posizione iniziale
 		this.position.set(x, y, -250);
 		//	Stato dell'oggetto
-		this.die = false;
+		this.hitten = false;
 		this.dead = false;
 		//	Rappresentazione HSL del colore
 		this.hsl = {};
@@ -57,9 +57,9 @@ class SpaceTarget extends THREE.Mesh {
 		this.add(this.sound);
 	}
 
-	kill() {
+	hit(){
 		//	Scolorimento progressivo
-		this.die = true;
+		this.hitten = true;
 		//	Suono
 		this.sound.play();
 	}
@@ -68,7 +68,7 @@ class SpaceTarget extends THREE.Mesh {
 		var speed = delta * this.acceleration + this.initial_speed;
 		var diespeed = 1/1.45;
 		//	Se l'oggetto è in fase terminale
-		if (this.die && !this.dead) {
+		if (this.hitten && !this.dead) {
 			//	Desaturazione
 			this.hsl.s -= delta;
 			this.material.color.setHSL(this.hsl.h, this.hsl.s, this.hsl.l);
