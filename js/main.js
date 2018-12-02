@@ -63,6 +63,7 @@ function onKeyDown(event){
 		case " ": gameScene.pause(); break;
 		case "d": switchStatistics(); break;
 		case "f": switchFullscreen(); break;
+		case "m": gameScene.mute(); break;
 	}
 }
 

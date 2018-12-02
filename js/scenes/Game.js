@@ -19,17 +19,8 @@ class Game {
     //  Listener
     this.listener = new THREE.AudioListener();
     this.camera.add(this.listener);
-    // Sorgente audio globale
-    var sound = new THREE.Audio(this.listener);
-    // load a sound and set it as the Audio object's buffer
-    var audioLoader = new THREE.AudioLoader();
-    audioLoader.load("../../sound/ambient.ogg", function(buffer) {
-      sound.setBuffer(buffer);
-      sound.setLoop(true);
-      sound.setVolume(0.7);
-      sound.play();
-    });
-    this._initialize();
+    // Music
+    this.undertone = this._buildUndertone();
     //  Light
     this.scene.add(new THREE.PointLight(0xffffff, 1, 1000));
     //  Lifebar
@@ -45,6 +36,9 @@ class Game {
     //  Game state
     this.currentState = '';
     this.stateStack = [];
+    //  Initialize game data
+    this._initialize();
+    //  Current game stae
     this._updateCurrentState('intro');
   }
 
@@ -82,6 +76,19 @@ class Game {
     return camera;
   }
 
+  _buildUndertone(){
+    //  Source
+    var sound = new THREE.Audio(this.listener);
+    //  Load of the audio file
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load("../../sound/ambient.ogg", function(buffer) {
+      sound.setBuffer(buffer);
+      sound.setLoop(true);
+      sound.setVolume(0.7);
+      sound.play();
+    });
+    return sound;
+  }
   _updateCurrentState(state){
     this.currentState = state;
     this.stateStack.push(state);
@@ -149,10 +156,7 @@ class Game {
       }
     }
     if (this.currentState == "game_over" || this.currentState == "intro") {
-      //  Terminazione dei target restanti
-      this.targets.forEach(target => {
-        target.kill();
-      });
+      this.end();
     }
     if (this.currentState != "pause") {
       //  Ambient Object
@@ -302,7 +306,12 @@ class Game {
     this.renderer.render(this.scene, this.camera);
   }
 
-  //  Messa in pausa del gioco
+  //  State control functions
+  play(){
+    this._initialize();
+    this._updateCurrentState('play');
+  }
+
   pause() {
     if (this.currentState == "pause") {
       this._updateCurrentState('play');
@@ -324,11 +333,6 @@ class Game {
     this.play();
   }
 
-  play(){
-    this._initialize();
-    this._updateCurrentState('play');
-  }
-
   shoot(mouse) {
     //  Creazione del proiettile
     var bullet = new SpaceBullet(
@@ -346,13 +350,22 @@ class Game {
     this.points -= 10;
   }
 
+  //  Other
   onWindowResize() {
     var width = canvas.width;
     var height = canvas.height;
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-
     this.renderer.setSize(width, height);
+  }
+
+  mute(){
+    if(this.undertone.isPlaying){
+      this.undertone.pause();
+    }
+    else{
+      this.undertone.play();
+    }
   }
 }
 
