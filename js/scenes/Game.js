@@ -6,6 +6,7 @@ import SpaceTarget from '../subjects/SpaceTarget.js'
 const start_point = 3000;
 const start_speed = 100;
 const start_acceleration = 2;
+const bullet_loss = 10;
 
 class Game {
   constructor(canvas) {
@@ -26,6 +27,7 @@ class Game {
     this.lifebar = new Lifebar(this.points, start_point, 1);
     this.scene.add(this.lifebar);
     //  Game objects
+    this.bullets_to_add = [];
     this.bullets = [];
     this.targets = [];
     this.ambient = [];
@@ -176,6 +178,12 @@ class Game {
           this.scene.add(obj);
           this.deltaGenerate = 0;
         }
+        while(this.bullets_to_add.length!=0){
+          let bullet = this.bullets_to_add.pop();
+          this.scene.add(bullet);
+          this.bullets.unshift(bullet);
+          this.points -= bullet_loss;
+        }
       }
     }
   }
@@ -304,11 +312,7 @@ class Game {
       0.5,
       this.listener
     );
-    //  Aggiunta alla scena e all'insieme dei proiettili
-    this.scene.add(bullet);
-    this.bullets.unshift(bullet);
-    //  Perdita di punti #alebiagiotti
-    this.points -= 10;
+    this.bullets_to_add.unshift(bullet);
   }
 
   //  Other
