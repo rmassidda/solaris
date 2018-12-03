@@ -92,7 +92,7 @@ class Game {
 
   _updateCurrentState(state){
     this.currentState = state;
-    this.stateStack.push(state);
+    this.stateStack.unshift(state);
   }
 
   _initialize(){
@@ -122,7 +122,7 @@ class Game {
         x = Math.floor(aX + (bX - aX) * Math.random());
         y = Math.floor(aY + (bY - aY) * Math.random());
         obj = new SpaceObject(x, y, this.speed, this.acceleration);
-        this.ambient.push(obj);
+        this.ambient.unshift(obj);
         this.scene.add(obj);
       }
       if(this.currentState=='play'){
@@ -130,7 +130,7 @@ class Game {
         if (this.points <= (this.speed + this.acceleration * 5) * 5){
           //  The notification has been sent more than a second ago
           if(this.deltaOutOfFuel > 1){
-            this.notify.push({
+            this.notify.unshift({
               color: {
                 r: 1,
                 g: 0.1,
@@ -172,7 +172,7 @@ class Game {
             this.listener
           );
           //  Add to targets
-          this.targets.push(obj);
+          this.targets.unshift(obj);
           this.scene.add(obj);
           this.deltaGenerate = 0;
         }
@@ -214,7 +214,7 @@ class Game {
               bullet.mute();
               this.to_remove.add(bullet);
               //  Notification
-              this.notify.push({
+              this.notify.unshift({
                 color: intersects[0].object.material.color,
                 value: intersects[0].object.bonus,
                 position: "center"
@@ -306,7 +306,7 @@ class Game {
     );
     //  Aggiunta alla scena e all'insieme dei proiettili
     this.scene.add(bullet);
-    this.bullets.push(bullet);
+    this.bullets.unshift(bullet);
     //  Perdita di punti #alebiagiotti
     this.points -= 10;
   }
