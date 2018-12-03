@@ -15,8 +15,6 @@ var enableFullscreen = true;
 //	Statistics
 var statistics = document.getElementById("statistics");
 statistics.style.opacity = 0;
-//	Highscore
-var highscore = 0;
 //	Internal state
 var currentState;
 //	Swipe
@@ -226,17 +224,16 @@ function render() {
 			]);
 		}
 		else if(state == 'game_over'){
-			highscore = Math.ceil(Math.max(highscore,gameScene.distance));
 			titleAppear([
 				{
 					message: 'Game Over',
 					color: 'red'
 				},
 				{
-					message: 'Current score\t'+Math.ceil(gameScene.distance)
+					message: 'Current score\t'+Math.ceil(gameScene.score)
 				},
 				{
-					message: 'Highscore\t'+highscore
+					message: 'Highscore\t'+Math.ceil(gameScene.highscore)
 				}
 			])
 		}
@@ -250,10 +247,10 @@ function render() {
 					message: 'Touch to unpause\nswipe up to start new game'
 				},
 				{
-					message: 'Current score\t'+Math.ceil(gameScene.distance)
+					message: 'Current score\t'+Math.ceil(gameScene.score)
 				},
 				{
-					message: 'Highscore\t'+highscore
+					message: 'Highscore\t'+Math.ceil(gameScene.highscore)
 				}
 			])
 		}

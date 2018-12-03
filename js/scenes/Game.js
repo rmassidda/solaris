@@ -4,7 +4,6 @@ import SpaceObject from '../subjects/SpaceObject.js'
 import SpaceTarget from '../subjects/SpaceTarget.js'
 
 const start_point = 3000;
-const start_distance = 0;
 const start_speed = 100;
 const start_acceleration = 2;
 
@@ -38,6 +37,7 @@ class Game {
     this.stateStack = [];
     //  Initialize game data
     this._initialize();
+    this.highscore = 0;
     //  Current game stae
     this._updateCurrentState('intro');
   }
@@ -107,26 +107,10 @@ class Game {
     //  this.deltaSign = 0;
     //  Initial data
     this.points = start_point;
-    this.distance = start_distance;
+    this.score = 0;
+    this.distance = 0;
     this.speed = start_speed;
     this.acceleration = start_acceleration;
-  }
-
-  _generate(){
-    //  Ambient Object
-    let n, aX, bX, aY, bY, x, y, obj;
-    n = Math.floor(Math.random() * 2);
-    aX = -this.canvas.width / 2;
-    bX = -aX;
-    aY = -this.canvas.height / 2;
-    bY = -aY;
-    for (let i = 0; i < n; i++) {
-      x = Math.floor(aX + (bX - aX) * Math.random());
-      y = Math.floor(aY + (bY - aY) * Math.random());
-      obj = new SpaceObject(x, y, this.speed, this.acceleration);
-      this.ambient.push(obj);
-      this.scene.add(obj);
-    }
   }
 
   update() {
@@ -219,6 +203,7 @@ class Game {
               intersects[0].object.hit();
               //  Achieve bonus
               this.points += intersects[0].object.bonus;
+              this.score += intersects[0].object.bonus;
               //  Remove bullet
               bullet.mute();
               this.to_remove.add(bullet);
@@ -250,7 +235,20 @@ class Game {
           this.to_remove.add(target);
         }
       });
-
+      //  Ambient Object
+      let n, aX, bX, aY, bY, x, y, obj;
+      n = Math.floor(Math.random() * 2);
+      aX = -this.canvas.width / 2;
+      bX = -aX;
+      aY = -this.canvas.height / 2;
+      bY = -aY;
+      for (let i = 0; i < n; i++) {
+        x = Math.floor(aX + (bX - aX) * Math.random());
+        y = Math.floor(aY + (bY - aY) * Math.random());
+        obj = new SpaceObject(x, y, this.speed, this.acceleration);
+        this.ambient.push(obj);
+        this.scene.add(obj);
+      }
       this.ambient.forEach(object =>{
         if(object.update(this.deltaTime)>0){
           this.to_remove.add(this.object);
@@ -288,6 +286,9 @@ class Game {
   }
 
   end(){
+    if(this.score>this.highscore){
+      this.highscore = this.score;
+    }
     this.targets.forEach(target => {
       if(!target.hitten){
         target.hit();
