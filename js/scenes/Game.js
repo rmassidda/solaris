@@ -110,10 +110,79 @@ class Game {
     this.acceleration = start_acceleration;
   }
 
+  _generate(){
+    let n, aX, bX, aY, bY, x, y, obj;
+    if(this.currentState!='pause'){
+      n = Math.floor(Math.random() * 2);
+      aX = -this.canvas.width / 2;
+      bX = -aX;
+      aY = -this.canvas.height / 2;
+      bY = -aY;
+      for (let i = 0; i < n; i++) {
+        x = Math.floor(aX + (bX - aX) * Math.random());
+        y = Math.floor(aY + (bY - aY) * Math.random());
+        obj = new SpaceObject(x, y, this.speed, this.acceleration);
+        this.ambient.push(obj);
+        this.scene.add(obj);
+      }
+      if(this.currentState=='play'){
+        //  The game is going to end in five seconds.
+        if (this.points <= (this.speed + this.acceleration * 5) * 5){
+          //  The notification has been sent more than a second ago
+          if(this.deltaOutOfFuel > 1){
+            this.notify.push({
+              color: {
+                r: 1,
+                g: 0.1,
+                b: 0.1
+              },
+              value: "OUT\nOF\nFUEL\n",
+              position: "right"
+            });
+            this.deltaOutOfFuel = 0;
+          }
+        }
+        //  The last element has been generated more than a second ago
+        if (this.deltaGenerate > 1 ) {
+          //  Random type
+          var choice = Math.random();
+          var type = "";
+          if (choice <= 0.5){
+            type = "alfa";
+          } else if (choice <= 0.8) {
+            type = "beta";
+          } else if (choice <= 0.95) {
+            type = "gamma";
+          } else {
+            type = "delta";
+          }
+          //  Space coordinates
+          aX = -this.camera.aspect * 10; // this.canvas.width / 100;
+          bX = -aX;
+          aY = -10; //this.canvas.height / 100;
+          bY = -aY;
+          x = aX + (bX - aX) * Math.random();
+          y = aY + (bY - aY) * Math.random();
+          obj = new SpaceTarget(
+            x,
+            y,
+            this.speed / 4,
+            this.acceleration,
+            type,
+            this.listener
+          );
+          //  Add to targets
+          this.targets.push(obj);
+          this.scene.add(obj);
+          this.deltaGenerate = 0;
+        }
+      }
+    }
+  }
+
   update() {
-    // Elapsed time
+    // Update times
     this.deltaTime = this.clock.getDelta();
-    //this.deltaSign += this.deltaTime;
     this.deltaOutOfFuel += this.deltaTime;
     this.deltaGenerate += this.deltaTime;
     //  Play state
@@ -122,56 +191,6 @@ class Game {
       this.speed += this.acceleration * this.deltaTime;
       //  Decrease player's points
       this.points -= (this.deltaTime * this.speed) / 2;
-      //  The game is going to end in five seconds.
-      if (this.points <= (this.speed + this.acceleration * 5) * 5){
-        //  The notification has been sent more than a second ago
-        if(this.deltaOutOfFuel > 1){
-          this.notify.push({
-            color: {
-              r: 1,
-              g: 0.1,
-              b: 0.1
-            },
-            value: "OUT\nOF\nFUEL\n",
-            position: "right"
-          });
-          this.deltaOutOfFuel = 0;
-        }
-      }
-      //  The last element has been generated more than a second ago
-      if (this.deltaGenerate > 1 ) {
-        //  Random type
-        var choice = Math.random();
-        var type = "";
-        if (choice <= 0.5){
-          type = "alfa";
-        } else if (choice <= 0.8) {
-          type = "beta";
-        } else if (choice <= 0.95) {
-          type = "gamma";
-        } else {
-          type = "delta";
-        }
-        //  Space coordinates
-        let aX = -this.camera.aspect * 10; // this.canvas.width / 100;
-        let bX = -aX;
-        let aY = -10; //this.canvas.height / 100;
-        let bY = -aY;
-        let x = aX + (bX - aX) * Math.random();
-        let y = aY + (bY - aY) * Math.random();
-        var obj = new SpaceTarget(
-          x,
-          y,
-          this.speed / 4,
-          this.acceleration,
-          type,
-          this.listener
-        );
-        //  Add to targets
-        this.targets.push(obj);
-        this.scene.add(obj);
-        this.deltaGenerate = 0;
-      }
       //  Update bullets position and detect collisions
       this.bullets.forEach(bullet =>{
         //  Update position
@@ -222,27 +241,12 @@ class Game {
           this.to_remove.add(target);
         }
       });
-      //  Ambient Object
-      let n, aX, bX, aY, bY, x, y, obj;
-      n = Math.floor(Math.random() * 2);
-      aX = -this.canvas.width / 2;
-      bX = -aX;
-      aY = -this.canvas.height / 2;
-      bY = -aY;
-      for (let i = 0; i < n; i++) {
-        x = Math.floor(aX + (bX - aX) * Math.random());
-        y = Math.floor(aY + (bY - aY) * Math.random());
-        obj = new SpaceObject(x, y, this.speed, this.acceleration);
-        this.ambient.push(obj);
-        this.scene.add(obj);
-      }
       this.ambient.forEach(object =>{
         if(object.update(this.deltaTime)>0){
           this.to_remove.add(this.object);
         }
       });
     }
-
     //  Lifebar update
     this.lifebar.update(this.points);
     //  Cleaning
@@ -252,6 +256,8 @@ class Game {
     this.scene.children = this.scene.children.filter(obj => !this.to_remove.has(obj));
     //  Empty set
     this.to_remove.clear();
+    //  Generate new objects
+    this._generate();
     //  Render
     this.renderer.render(this.scene, this.camera);
   }
