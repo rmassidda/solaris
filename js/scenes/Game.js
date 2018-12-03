@@ -112,6 +112,23 @@ class Game {
     this.acceleration = start_acceleration;
   }
 
+  _generate(){
+    //  Ambient Object
+    let n, aX, bX, aY, bY, x, y, obj;
+    n = Math.floor(Math.random() * 2);
+    aX = -this.canvas.width / 2;
+    bX = -aX;
+    aY = -this.canvas.height / 2;
+    bY = -aY;
+    for (let i = 0; i < n; i++) {
+      x = Math.floor(aX + (bX - aX) * Math.random());
+      y = Math.floor(aY + (bY - aY) * Math.random());
+      obj = new SpaceObject(x, y, this.speed, this.acceleration);
+      this.ambient.push(obj);
+      this.scene.add(obj);
+    }
+  }
+
   update() {
     // Elapsed time
     this.deltaTime = this.clock.getDelta();
@@ -233,20 +250,7 @@ class Game {
           this.to_remove.add(target);
         }
       });
-      //  Ambient Object
-      let n, aX, bX, aY, bY, x, y, obj;
-      n = Math.floor(Math.random() * 2);
-      aX = -this.canvas.width / 2;
-      bX = -aX;
-      aY = -this.canvas.height / 2;
-      bY = -aY;
-      for (let i = 0; i < n; i++) {
-        x = Math.floor(aX + (bX - aX) * Math.random());
-        y = Math.floor(aY + (bY - aY) * Math.random());
-        obj = new SpaceObject(x, y, this.speed, this.acceleration);
-        this.ambient.push(obj);
-        this.scene.add(obj);
-      }
+
       this.ambient.forEach(object =>{
         if(object.update(this.deltaTime)>0){
           this.to_remove.add(this.object);
