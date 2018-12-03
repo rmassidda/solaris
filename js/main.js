@@ -260,7 +260,7 @@ function render() {
 	//	Statistics
 	statistics.innerText =
 		Math.floor(gameScene.points)+"LP\t"+
-		gameScene.distance.toFixed(2)+"m\t"+
+		gameScene.score.toFixed(2)+"Score\t"+
 		gameScene.speed.toFixed(2)+"m/s";
 
 	//	Next iteration

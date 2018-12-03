@@ -103,12 +103,9 @@ class Game {
     this.deltaOutOfFuel = 0;
     //  Time since last taget generation
     this.deltaGenerate = 0;
-    //  Time since last distance sign
-    //  this.deltaSign = 0;
     //  Initial data
     this.points = start_point;
     this.score = 0;
-    this.distance = 0;
     this.speed = start_speed;
     this.acceleration = start_acceleration;
   }
@@ -122,19 +119,9 @@ class Game {
     //  Play state
     if (this.currentState == 'play') {
       //  Update game data
-      this.distance += this.speed * this.deltaTime;
       this.speed += this.acceleration * this.deltaTime;
       //  Decrease player's points
       this.points -= (this.deltaTime * this.speed) / 2;
-      //  Notification that a certain distance has been passed
-      /*if (this.deltaSign >= this.speed/100) {
-        this.notify.push({
-          color: { r: 0, g: 1, b: 0 },
-          value: Math.floor(this.distance) + "!",
-          position: "left"
-        });
-        this.deltaSign = 0;
-      }*/
       //  The game is going to end in five seconds.
       if (this.points <= (this.speed + this.acceleration * 5) * 5){
         //  The notification has been sent more than a second ago
