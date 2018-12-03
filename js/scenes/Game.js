@@ -243,7 +243,6 @@ class Game {
       }
     }
     if (this.currentState != "pause") {
-      //  Let the targets die
       this.targets.forEach(target =>{
         if(target.update(this.deltaTime)>0||target.dead){
           this.to_remove.add(target);
