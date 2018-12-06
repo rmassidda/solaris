@@ -1,6 +1,6 @@
 class Target extends THREE.Mesh {
-	constructor(x, y, speed, acceleration, type,listener) {
-		super(new THREE.SphereBufferGeometry(2, 12, 12), new THREE.MeshPhongMaterial(
+	constructor(geometry, x, y, speed, acceleration, type,listener) {
+		super(geometry, new THREE.MeshPhongMaterial(
 			{
 				opacity: 1,
 				flatShading: true,

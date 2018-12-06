@@ -1,7 +1,7 @@
 import Lifebar from '../subjects/Lifebar.js'
 import BulletFactory from '../factory/BulletFactory.js'
 import ObjectFactory from '../factory/ObjectFactory.js'
-import Target from '../subjects/Target.js'
+import TargetFactory from '../factory/TargetFactory.js'
 
 const start_point = 3000;
 const start_speed = 100;
@@ -165,7 +165,7 @@ class Game {
           bY = -aY;
           x = aX + (bX - aX) * Math.random();
           y = aY + (bY - aY) * Math.random();
-          obj = new Target(
+          obj = TargetFactory.newTarget(
             x,
             y,
             this.speed / 4,
@@ -243,6 +243,7 @@ class Game {
     if (this.currentState != "pause") {
       this.targets.forEach(target =>{
         if(target.update(this.deltaTime)>0||target.dead){
+          target.material.dispose();
           this.to_remove.add(target);
         }
       });
@@ -258,7 +259,10 @@ class Game {
     this.ambient = this.ambient.filter(obj => !this.to_remove.has(obj));
     this.bullets = this.bullets.filter(obj => !this.to_remove.has(obj));
     this.targets = this.targets.filter(obj => !this.to_remove.has(obj));
-    this.scene.children = this.scene.children.filter(obj => !this.to_remove.has(obj));
+    //this.scene.children = this.scene.children.filter(obj => !this.to_remove.has(obj));
+    this.to_remove.forEach(obj => {
+      this.scene.remove(obj);
+    })
     //  Empty set
     this.to_remove.clear();
     //  Generate new objects
