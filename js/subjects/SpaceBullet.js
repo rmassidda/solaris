@@ -36,7 +36,9 @@ class SpaceBullet extends THREE.Mesh {
   }
 
   mute() {
-    this.sound.stop();
+    if(this.sound !== null){
+      this.sound.stop();
+    }
   }
   //  Oggetto viene incontro
   update(delta) {
