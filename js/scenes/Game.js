@@ -243,6 +243,7 @@ class Game {
     if (this.currentState != "pause") {
       this.targets.forEach(target =>{
         if(target.update(this.deltaTime)>0||target.dead){
+          //  Material can't be reused, so it's disposed
           target.material.dispose();
           this.to_remove.add(target);
         }
@@ -259,10 +260,10 @@ class Game {
     this.ambient = this.ambient.filter(obj => !this.to_remove.has(obj));
     this.bullets = this.bullets.filter(obj => !this.to_remove.has(obj));
     this.targets = this.targets.filter(obj => !this.to_remove.has(obj));
-    //this.scene.children = this.scene.children.filter(obj => !this.to_remove.has(obj));
+    //  THREE.JS documentation suggests to remove meshes like this
     this.to_remove.forEach(obj => {
       this.scene.remove(obj);
-    })
+    });
     //  Empty set
     this.to_remove.clear();
     //  Generate new objects
