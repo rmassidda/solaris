@@ -203,7 +203,6 @@ class Game {
       this.bullets.forEach(bullet =>{
         //  Update position
         if(bullet.update(this.deltaTime) < -200){
-            bullet.mute();
             this.to_remove.add(bullet);
         }
         else{
@@ -219,7 +218,6 @@ class Game {
               this.points += intersects[0].object.bonus;
               this.score += intersects[0].object.bonus;
               //  Remove bullet
-              bullet.mute();
               this.to_remove.add(bullet);
               //  Notification
               this.notify.unshift({

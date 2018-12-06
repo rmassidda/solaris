@@ -30,15 +30,9 @@ class SpaceBullet extends THREE.Mesh {
       sound.setVolume(0.1);
       sound.play();
     });
-    this.sound = sound;
-    this.add(this.sound);
+    this.add(sound);
   }
 
-  mute() {
-    if(this.sound !== null){
-      this.sound.stop();
-    }
-  }
   //  Oggetto viene incontro
   update(delta) {
     var speed = delta * this.acceleration + this.initial_speed;
