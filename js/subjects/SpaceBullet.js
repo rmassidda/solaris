@@ -19,7 +19,6 @@ class SpaceBullet extends THREE.Mesh {
     //  Posizione iniziale del proiettile
     this.position.x = dx;
     this.position.y = dy;
-    console.log(dx + "\t" + dy);
     this.position.z = -1;
     //  Audio
     var sound = new THREE.PositionalAudio(listener);
