@@ -326,12 +326,10 @@ class Game {
   }
 
   mute(){
-    if(this.undertone.isPlaying){
-      this.undertone.pause();
-    }
-    else{
-      this.undertone.play();
-    }
+    this.listener.setMasterVolume(0);
+  }
+  unmute(){
+    this.listener.setMasterVolume(1);
   }
 }
 

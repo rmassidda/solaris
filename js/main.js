@@ -131,6 +131,17 @@ function handleEnd(x,y){
 			gameScene.restart();
 		}
 	}
+	//	Swipe right
+	else if(swipeDirection=='right'){
+		if(currentState=='pause'){
+			gameScene.unmute();
+		}
+	}
+	else if(swipeDirection=='left'){
+		if(currentState=='pause'){
+			gameScene.mute();
+		}
+	}
 }
 
 function onResizeListener(event){
@@ -244,7 +255,7 @@ function render() {
 					color: 'green'
 				},
 				{
-					message: 'Touch to unpause\nswipe up to start new game'
+					message: 'Touch to unpause\nswipe up to start new game\nleft/right to mute/unmute'
 				},
 				{
 					message: 'Current score\t'+Math.ceil(gameScene.score)
