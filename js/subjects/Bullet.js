@@ -1,4 +1,4 @@
-class SpaceBullet extends THREE.Mesh {
+class Bullet extends THREE.Mesh {
   constructor(geometry,material,dx, dy, speed, acceleration, listener) {
     super(geometry,material);
     //  Where the bullet is
@@ -29,4 +29,4 @@ class SpaceBullet extends THREE.Mesh {
   }
 }
 
-export default SpaceBullet;
+export default Bullet;

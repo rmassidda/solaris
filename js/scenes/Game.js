@@ -1,7 +1,7 @@
 import Lifebar from '../subjects/Lifebar.js'
 import BulletFactory from '../factory/BulletFactory.js'
 import ObjectFactory from '../factory/ObjectFactory.js'
-import SpaceTarget from '../subjects/SpaceTarget.js'
+import Target from '../subjects/Target.js'
 
 const start_point = 3000;
 const start_speed = 100;
@@ -123,7 +123,7 @@ class Game {
       for (let i = 0; i < n; i++) {
         x = Math.floor(aX + (bX - aX) * Math.random());
         y = Math.floor(aY + (bY - aY) * Math.random());
-        obj = ObjectFactory.newSpaceObject(x, y, this.speed, this.acceleration);
+        obj = ObjectFactory.newStar(x, y, this.speed, this.acceleration);
         this.ambient.unshift(obj);
         this.scene.add(obj);
       }
@@ -165,7 +165,7 @@ class Game {
           bY = -aY;
           x = aX + (bX - aX) * Math.random();
           y = aY + (bY - aY) * Math.random();
-          obj = new SpaceTarget(
+          obj = new Target(
             x,
             y,
             this.speed / 4,
@@ -301,7 +301,7 @@ class Game {
 
   shoot(mouse) {
     //  Creazione del proiettile
-    var bullet = BulletFactory.newSpaceBullet(
+    var bullet = BulletFactory.newBullet(
       mouse.x * this.camera.aspect,
       mouse.y,
       start_speed,

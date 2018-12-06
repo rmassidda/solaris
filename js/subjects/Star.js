@@ -1,4 +1,4 @@
-class SpaceObject extends THREE.Mesh {
+class Star extends THREE.Mesh {
 	constructor(geometry, material, x, y, speed, acceleration) {
 		super(geometry,material);
 		//	Where the object is
@@ -16,4 +16,4 @@ class SpaceObject extends THREE.Mesh {
     }
 }
 
-export default SpaceObject;
+export default Star;

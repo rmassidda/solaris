@@ -1,4 +1,4 @@
-import SpaceBullet from '../subjects/SpaceBullet.js'
+import Bullet from '../subjects/Bullet.js'
 
 //  Constant geometry and material
 const geometry = new THREE.SphereBufferGeometry(0.5, 12, 12);
@@ -11,8 +11,8 @@ const material = new THREE.MeshPhongMaterial({
 
 class BulletFactory{
   //  Static method to create a new object
-  static newSpaceBullet(dx, dy, speed, acceleration, listener){
-    return new SpaceBullet(geometry, material, dx, dy, speed, acceleration, listener);
+  static newBullet(dx, dy, speed, acceleration, listener){
+    return new Bullet(geometry, material, dx, dy, speed, acceleration, listener);
   }
 }
 

@@ -1,4 +1,4 @@
-class SpaceTarget extends THREE.Mesh {
+class Target extends THREE.Mesh {
 	constructor(x, y, speed, acceleration, type,listener) {
 		super(new THREE.SphereBufferGeometry(2, 12, 12), new THREE.MeshPhongMaterial(
 			{
@@ -89,4 +89,4 @@ class SpaceTarget extends THREE.Mesh {
 	}
 }
 
-export default SpaceTarget;
+export default Target;

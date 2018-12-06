@@ -1,4 +1,4 @@
-import SpaceObject from '../subjects/SpaceObject.js'
+import Star from '../subjects/Star.js'
 
 //  Constant geometry and material
 const geometry = new THREE.IcosahedronBufferGeometry(2, 2);
@@ -10,8 +10,8 @@ const material =  new THREE.MeshPhysicalMaterial({
 
 class ObjectFactory{
   //  Static method to create a new object
-  static newSpaceObject(x, y, speed, acceleration){
-    return new SpaceObject(geometry,material,x, y, speed, acceleration);
+  static newStar(x, y, speed, acceleration){
+    return new Star(geometry,material,x, y, speed, acceleration);
   }
 }
 
