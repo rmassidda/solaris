@@ -249,7 +249,7 @@ class Game {
       });
       this.ambient.forEach(object =>{
         if(object.update(this.deltaTime)>0){
-          this.to_remove.add(this.object);
+          this.to_remove.add(object);
         }
       });
     }
