@@ -9,20 +9,16 @@ class SpaceBullet extends THREE.Mesh {
         shininess: 0.3
       })
     );
-    //  Raggio
+    //  Radius
     this.radius = radius;
-    //  Direzione del proiettile
+    //  Where the bullet is
+    this.position.set(dx,dy,-1);
+    //  How the bullet moves
     this.direction = new THREE.Vector3(dx, dy, -1).normalize();
-    //  Velocità e accelerazione
     this.initial_speed = speed;
     this.acceleration = acceleration;
-    //  Posizione iniziale del proiettile
-    this.position.x = dx;
-    this.position.y = dy;
-    this.position.z = -1;
     //  Audio
     var sound = new THREE.PositionalAudio(listener);
-    // Caricamento dell'oggetto audio
     var audioLoader = new THREE.AudioLoader();
     audioLoader.load("../../sound/bullet.ogg", function(buffer) {
       sound.setBuffer(buffer);
@@ -33,7 +29,7 @@ class SpaceBullet extends THREE.Mesh {
     this.add(sound);
   }
 
-  //  Oggetto viene incontro
+  //  Update position
   update(delta) {
     var speed = delta * this.acceleration + this.initial_speed;
     this.position.x += this.direction.x * delta * speed;

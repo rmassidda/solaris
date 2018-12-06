@@ -7,9 +7,9 @@ class SpaceTarget extends THREE.Mesh {
 				shininess: 0.3
 			}
 		));
-		//	Tipo di pallina
+		//	Target type
 		this.type = type;
-		//	Colore
+		//	Color and bonus value depends on the type
 		switch (type) {
 			case 'alfa':
 				//	Solarized Red
@@ -32,21 +32,19 @@ class SpaceTarget extends THREE.Mesh {
 				this.bonus = 1000;
 				break;
 		}
-		//	Velocità
-		this.initial_speed = speed;
-		//	Accelerazione
-		this.acceleration = acceleration;
-		//	Posizione iniziale
-		this.position.set(x, y, -250);
-		//	Stato dell'oggetto
-		this.hitten = false;
-		this.dead = false;
-		//	Rappresentazione HSL del colore
+		//	HSL represention of the color
 		this.hsl = {};
 		this.material.color.getHSL(this.hsl);
+		//	Where the target is
+		this.position.set(x, y, -250);
+		//	How the target moves
+		this.initial_speed = speed;
+		this.acceleration = acceleration;
+		//	State of the object
+		this.hitten = false;
+		this.dead = false;
 		//	Audio
 		var sound = new THREE.PositionalAudio(listener);
-		// Caricamento dell'oggetto audio
 		var audioLoader = new THREE.AudioLoader();
 		audioLoader.load('../../sound/die.ogg', function (buffer) {
 			sound.setBuffer(buffer);
@@ -58,31 +56,34 @@ class SpaceTarget extends THREE.Mesh {
 	}
 
 	hit(){
-		//	Scolorimento progressivo
+		//	The target is been hitten
 		this.hitten = true;
 		//	Suono
 		this.sound.play();
 	}
 
 	update(delta) {
+		//	Movement speed
 		var speed = delta * this.acceleration + this.initial_speed;
+		//	Speed based on the duration of the sound emitted by the object
 		var diespeed = 1/1.45;
-		//	Se l'oggetto è in fase terminale
+		//	If the object is been hitten and isn't already disappeared
 		if (this.hitten && !this.dead) {
-			//	Desaturazione
-			this.hsl.s -= delta;
+			//	Desaturation
+			this.hsl.s -= delta * diespeed;
 			this.material.color.setHSL(this.hsl.h, this.hsl.s, this.hsl.l);
-			//	Rimpicciolimento
+			//	Resizing
 			this.scale.x -= delta * diespeed;
 			this.scale.y -= delta * diespeed;
 			this.scale.z -= delta * diespeed;
-			//	Se l'oggetto è troppo piccolo per essere visto viene terminato
+			//	If the object is too little it is considered dead
 			if (this.scale.x < 0 || this.scale.y < 0 || this.scale.z < 0) {
 				this.dead = true;
 			}
 		}
-        this.rotation.y += delta;
-
+		//	Rotation
+    this.rotation.y += delta * diespeed;
+		//	Movement
 		this.position.z += delta * speed;
 		return this.position.z;
 	}
