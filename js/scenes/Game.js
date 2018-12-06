@@ -1,6 +1,6 @@
 import Lifebar from '../subjects/Lifebar.js'
 import BulletFactory from '../factory/BulletFactory.js'
-import ObjectFactory from '../factory/ObjectFactory.js'
+import StarFactory from '../factory/StarFactory.js'
 import TargetFactory from '../factory/TargetFactory.js'
 
 const start_point = 3000;
@@ -123,7 +123,7 @@ class Game {
       for (let i = 0; i < n; i++) {
         x = Math.floor(aX + (bX - aX) * Math.random());
         y = Math.floor(aY + (bY - aY) * Math.random());
-        obj = ObjectFactory.newStar(x, y, this.speed, this.acceleration);
+        obj = StarFactory.newStar(x, y, this.speed, this.acceleration);
         this.ambient.unshift(obj);
         this.scene.add(obj);
       }
@@ -248,9 +248,9 @@ class Game {
           this.to_remove.add(target);
         }
       });
-      this.ambient.forEach(object =>{
-        if(object.update(this.deltaTime)>0){
-          this.to_remove.add(object);
+      this.ambient.forEach(star =>{
+        if(star.update(this.deltaTime)>0){
+          this.to_remove.add(star);
         }
       });
     }

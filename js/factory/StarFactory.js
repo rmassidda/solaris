@@ -8,11 +8,11 @@ const material =  new THREE.MeshPhysicalMaterial({
   emissiveIntensity: 0.1
 });
 
-class ObjectFactory{
+class StarFactory{
   //  Static method to create a new object
   static newStar(x, y, speed, acceleration){
     return new Star(geometry,material,x, y, speed, acceleration);
   }
 }
 
-export default ObjectFactory;
+export default StarFactory;
