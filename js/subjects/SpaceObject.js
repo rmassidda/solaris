@@ -1,10 +1,6 @@
 class SpaceObject extends THREE.Mesh {
-	constructor(x, y, speed, acceleration) {
-		super(new THREE.IcosahedronBufferGeometry(2, 2), new THREE.MeshPhysicalMaterial({
-			color: new THREE.Color('white'),
-			emissive: new THREE.Color('#ffffff'),
-			emissiveIntensity: 0.1
-    }));
+	constructor(geometry, material, x, y, speed, acceleration) {
+		super(geometry,material);
 		//	Where the object is
 		this.position.set(x, y, -1000);
 		//	How the object moves

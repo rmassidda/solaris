@@ -1,6 +1,6 @@
 import Lifebar from '../subjects/Lifebar.js'
 import SpaceBullet from '../subjects/SpaceBullet.js'
-import SpaceObject from '../subjects/SpaceObject.js'
+import ObjectFactory from '../factory/ObjectFactory.js'
 import SpaceTarget from '../subjects/SpaceTarget.js'
 
 const start_point = 3000;
@@ -123,7 +123,7 @@ class Game {
       for (let i = 0; i < n; i++) {
         x = Math.floor(aX + (bX - aX) * Math.random());
         y = Math.floor(aY + (bY - aY) * Math.random());
-        obj = new SpaceObject(x, y, this.speed, this.acceleration);
+        obj = ObjectFactory.newSpaceObject(x, y, this.speed, this.acceleration);
         this.ambient.unshift(obj);
         this.scene.add(obj);
       }
