@@ -1,16 +1,6 @@
 class SpaceBullet extends THREE.Mesh {
-  constructor(dx, dy, speed, acceleration, radius, listener) {
-    super(
-      new THREE.SphereBufferGeometry(radius, 12, 12),
-      new THREE.MeshPhongMaterial({
-        color: new THREE.Color("#b58900"),
-        opacity: 1,
-        flatShading: true,
-        shininess: 0.3
-      })
-    );
-    //  Radius
-    this.radius = radius;
+  constructor(geometry,material,dx, dy, speed, acceleration, listener) {
+    super(geometry,material);
     //  Where the bullet is
     this.position.set(dx,dy,-1);
     //  How the bullet moves

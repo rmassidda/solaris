@@ -1,5 +1,5 @@
 import Lifebar from '../subjects/Lifebar.js'
-import SpaceBullet from '../subjects/SpaceBullet.js'
+import BulletFactory from '../factory/BulletFactory.js'
 import ObjectFactory from '../factory/ObjectFactory.js'
 import SpaceTarget from '../subjects/SpaceTarget.js'
 
@@ -301,12 +301,11 @@ class Game {
 
   shoot(mouse) {
     //  Creazione del proiettile
-    var bullet = new SpaceBullet(
+    var bullet = BulletFactory.newSpaceBullet(
       mouse.x * this.camera.aspect,
       mouse.y,
       start_speed,
       0,
-      0.5,
       this.listener
     );
     this.bullets_to_add.unshift(bullet);
