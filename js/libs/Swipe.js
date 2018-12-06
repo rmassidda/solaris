@@ -7,17 +7,13 @@ class Swipe{
         this.startY = y;
     }
 
-    checkSwipe(x,y,minDistance = 0.2, maxDistance = 1, timeLimit = 500){
+    checkSwipe(x,y,minDistance = 0.2, maxDistance = 1, timeLimit = 500,log = false){
         //  Difference of current and initial condition
         var elapsedTime = new Date().getTime() - this.time;
         var distanceX = this.startX - x;
         var distanceY = this.startY - y;
         //  Assumption that a swipe didn't happened
         var swipeDirection = null;
-        //  Log
-        console.log(elapsedTime)
-        console.log(distanceX);
-        console.log(distanceY);
         //  Check if a swipe happened
         if(elapsedTime<=timeLimit){
             if(Math.abs(distanceX) >= minDistance && Math.abs(distanceY) <= maxDistance){
@@ -27,7 +23,12 @@ class Swipe{
                 swipeDirection = (distanceY < 0)? 'up' : 'down';
             }
         }
-        console.log(swipeDirection);
+        if(log){
+          console.log(elapsedTime)
+          console.log(distanceX);
+          console.log(distanceY);
+          console.log(swipeDirection);
+        }
         return swipeDirection;
     }
 }
