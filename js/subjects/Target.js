@@ -61,14 +61,9 @@ class Target extends THREE.Mesh {
 		}
 	}
 
-	changeType(direction){
+	changeType(){
 		let i = types.indexOf(this.type);
-		//	Which way I'm visiting the array?
-		if(direction){ i++; }
-		else{	i--; }
-		//	Positive modulo
-		let l = types.length;
-		i = ((i % l) + l) % l;
+		i = (i + 1) % types.length;
 		//	Change type and commit
 		this.type = types[i];
 		this._commitType();

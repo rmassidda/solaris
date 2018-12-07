@@ -172,10 +172,11 @@ function handleEnd(x,y){
 	//	Swipe right
 	else if(swipeDirection=='right'){
 		if(currentState=='pause'){
-			gameScene.unmute();
+			gameScene.pause();
+			gameScene.edit();
 		}
 		else if(currentState=='edit'){
-			gameScene.changeTargetType(true);
+			gameScene.edit();
 		}
 	}
 	else if(swipeDirection=='left'){
@@ -183,7 +184,7 @@ function handleEnd(x,y){
 			gameScene.mute();
 		}
 		else if(currentState=='edit'){
-			gameScene.changeTargetType(false);
+			gameScene.changeTargetType();
 		}
 	}
 }
@@ -299,7 +300,7 @@ function render() {
 					color: 'green'
 				},
 				{
-					message: 'Touch to unpause\nswipe up to start new game\nleft/right to mute/unmute'
+					message: 'Touch to unpause\nswipe up to start new game\nleft to mute\nright to enter edit mode'
 				},
 				{
 					message: 'Current score\t'+Math.ceil(gameScene.score)

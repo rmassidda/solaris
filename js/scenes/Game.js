@@ -116,6 +116,7 @@ class Game {
     this.speed = start_speed;
     this.acceleration = start_acceleration;
     this.selected_target = null;
+    this.muted = false;
   }
 
   _generate(){
@@ -381,9 +382,9 @@ class Game {
 		}
   }
 
-  changeTargetType(direction){
+  changeTargetType(){
     if(this.selected_target !== null){
-      this.selected_target.changeType(direction);
+      this.selected_target.changeType();
     }
   }
 
@@ -440,10 +441,13 @@ class Game {
 
   //  Audio
   mute(){
-    this.listener.setMasterVolume(0);
-  }
-  unmute(){
-    this.listener.setMasterVolume(1);
+    if(this.muted){
+      this.listener.setMasterVolume(1);
+    }
+    else{
+      this.listener.setMasterVolume(0);
+    }
+    this.muted = !this.muted;
   }
 }
 
