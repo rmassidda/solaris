@@ -115,7 +115,7 @@ function handleEnd(x,y){
 			gameScene.shoot(tap);
 		}
 		else if(currentState == 'edit'){
-			gameScene.addTarget(tap);
+			gameScene.selectTarget(tap);
 		}
 		//	Intro/GameOver, start new game
 		else{

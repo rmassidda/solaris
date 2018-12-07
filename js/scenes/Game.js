@@ -113,6 +113,7 @@ class Game {
     this.score = 0;
     this.speed = start_speed;
     this.acceleration = start_acceleration;
+    this.selected_target = null;
   }
 
   _generate(){
@@ -292,31 +293,59 @@ class Game {
     }
     else if(this.currentState == "edit"){
       this._updateCurrentState("play");
+      //  Deselect old target
+      if(this.selected_target !== null){
+        this.selected_target.deselect();
+        this.selected_target = null;
+      }
     }
   }
 
   selectTarget(tap){
-      
+    //  Deselect old target
+    if(this.selected_target !== null){
+      this.selected_target.deselect();
+    }
+    //  Ray in the direction of the tap
+    var raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera( tap, this.camera );
+    // Targets intersecting the ray
+    var intersects = raycaster.intersectObjects( this.targets );
+    if (intersects.length > 0) {
+      //  Target tapped
+      this.selected_target = intersects[0].object;
+    }
+    else{
+      //  Create new target
+      this.selected_target = this.addTarget(tap);
+    }
+    //  Select new target
+    this.selected_target.select();
   }
 
   addTarget(tap){
-    //  Space coordinates
+    //  Ray in direction of the tap
     var raycaster = new THREE.Raycaster();
     raycaster.setFromCamera( tap, this.camera );
+    //  Intersection with the plane
     var point = raycaster.ray.intersectPlane(this.plane);
-    if(point!=null){
-      var obj = TargetFactory.newTarget(
-        tap.x,
-        tap.y,
-        this.speed / 4,
-        this.acceleration,
-        "alfa",
-        this.listener
-      );
-      obj.position.copy(point);
-      this.targets.unshift(obj);
-      this.scene.add(obj);
-    }
+    //  New Object
+    var obj = TargetFactory.newTarget(
+      0,
+      0,
+      this.speed / 4,
+      this.acceleration,
+      "alfa",
+      this.listener
+    );
+    //  Position it in the intersection
+    obj.position.copy(point);
+    //  Add to the target set
+    this.targets.unshift(obj);
+    //  Add to the scene
+    this.scene.add(obj);
+    //  Select it!
+    return obj;
   }
 
   end(){

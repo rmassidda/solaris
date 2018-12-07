@@ -9,29 +9,7 @@ class Target extends THREE.Mesh {
 		));
 		//	Target type
 		this.type = type;
-		//	Color and bonus value depends on the type
-		switch (type) {
-			case 'alfa':
-				//	Solarized Red
-				this.material.color = new THREE.Color('#dc322f');
-				this.bonus = 100;
-				break;
-			case 'beta':
-				//	Solarized Blue
-				this.material.color = new THREE.Color('#268bd2');
-				this.bonus = 200;
-				break;
-			case 'gamma':
-				//	Solarized Orange
-				this.material.color = new THREE.Color('#cb4b16');
-				this.bonus = 500;
-				break;
-			case 'delta':
-				//	Solarized Violet
-				this.material.color = new THREE.Color('#6c71c4');
-				this.bonus = 1000;
-				break;
-		}
+		this._defineType();
 		//	HSL represention of the color
 		this.hsl = {};
 		this.material.color.getHSL(this.hsl);
@@ -55,6 +33,32 @@ class Target extends THREE.Mesh {
 		this.add(this.sound);
 	}
 
+	_defineType(){
+		//	Color and bonus value depends on the type
+		switch (this.type) {
+			case 'alfa':
+				//	Solarized Red
+				this.material.color = new THREE.Color('#dc322f');
+				this.bonus = 100;
+				break;
+			case 'beta':
+				//	Solarized Blue
+				this.material.color = new THREE.Color('#268bd2');
+				this.bonus = 200;
+				break;
+			case 'gamma':
+				//	Solarized Orange
+				this.material.color = new THREE.Color('#cb4b16');
+				this.bonus = 500;
+				break;
+			case 'delta':
+				//	Solarized Violet
+				this.material.color = new THREE.Color('#6c71c4');
+				this.bonus = 1000;
+				break;
+		}
+	}
+
 	hit(){
 		//	The target is been hitten
 		this.hitten = true;
@@ -63,11 +67,11 @@ class Target extends THREE.Mesh {
 	}
 
 	select(){
-		this.material.shininess = 1;
+		this.material.emissive = new THREE.Color(0xff0000);
 	}
 
 	deselect(){
-		this.material.shininess = 0.3;
+		this.material.emissive = new THREE.Color(0x000000);
 	}
 
 	update(delta) {
