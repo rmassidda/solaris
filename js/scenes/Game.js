@@ -286,9 +286,11 @@ class Game {
   end(){
     //  Game is ended, start timeout
     this.gameOverTimeout = 0;
+    //  Update highscore
     if(this.score>this.highscore){
       this.highscore = this.score;
     }
+    //  Destroy remaining targets
     this.targets.forEach(target => {
       if(!target.hitten){
         target.hit();
@@ -313,7 +315,6 @@ class Game {
     this.bullets_to_add.unshift(bullet);
   }
 
-  //  Other
   onWindowResize() {
     var width = canvas.width;
     var height = canvas.height;
@@ -322,6 +323,7 @@ class Game {
     this.renderer.setSize(width, height);
   }
 
+  //  Audio
   mute(){
     this.listener.setMasterVolume(0);
   }
