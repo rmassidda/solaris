@@ -295,6 +295,10 @@ class Game {
     }
   }
 
+  selectTarget(tap){
+      
+  }
+
   addTarget(tap){
     //  Space coordinates
     var raycaster = new THREE.Raycaster();

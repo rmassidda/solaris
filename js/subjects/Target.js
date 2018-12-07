@@ -62,6 +62,14 @@ class Target extends THREE.Mesh {
 		this.sound.play();
 	}
 
+	select(){
+		this.material.shininess = 1;
+	}
+
+	deselect(){
+		this.material.shininess = 0.3;
+	}
+
 	update(delta) {
 		//	Movement speed
 		var speed = delta * this.acceleration + this.initial_speed;
