@@ -229,13 +229,15 @@ class Game {
       }
     }
     if (this.currentState != "pause") {
-      this.targets.forEach(target =>{
-        if(target.update(this.deltaTime)>0||target.dead){
-          //  Material can't be reused, so it's disposed
-          target.material.dispose();
-          this.to_remove.add(target);
-        }
-      });
+      if(this.currentState != "edit"){
+        this.targets.forEach(target =>{
+          if(target.update(this.deltaTime)>0||target.dead){
+            //  Material can't be reused, so it's disposed
+            target.material.dispose();
+            this.to_remove.add(target);
+          }
+        });
+      }
       this.bullets.forEach(bullet =>{
         if(bullet.update(this.deltaTime) < -200){
             this.to_remove.add(bullet);
@@ -280,6 +282,15 @@ class Game {
     } else if (this.currentState == "play") {
       this._updateCurrentState('pause');
       this.clock.stop();
+    }
+  }
+
+  edit(){
+    if(this.currentState == "play"){
+      this._updateCurrentState("edit");
+    }
+    else if(this.currentState == "edit"){
+      this._updateCurrentState("play");
     }
   }
 

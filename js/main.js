@@ -60,6 +60,7 @@ function onKeyDown(event){
 	switch(event.key){
 		case " ": gameScene.pause(); break;
 		case "d": switchStatistics(); break;
+		case "e": gameScene.edit(); break;
 		case "f": switchFullscreen(); break;
 	}
 }
