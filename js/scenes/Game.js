@@ -115,18 +115,13 @@ class Game {
   _generate(){
     let n, aX, bX, aY, bY, x, y, obj;
     if(this.currentState!='pause'){
-      n = Math.floor(Math.random() * 2);
-      aX = -this.canvas.width / 2;
-      bX = -aX;
-      aY = -this.canvas.height / 2;
-      bY = -aY;
-      for (let i = 0; i < n; i++) {
-        x = Math.floor(aX + (bX - aX) * Math.random());
-        y = Math.floor(aY + (bY - aY) * Math.random());
-        obj = StarFactory.newStar(x, y, this.speed, this.acceleration);
-        this.ambient.unshift(obj);
-        this.scene.add(obj);
-      }
+      //  Star generation
+      x = Math.floor(this.canvas.width * (1 - 2 * Math.random()));
+      y = Math.floor(this.canvas.height * (1 - 2 * Math.random()));
+      obj = StarFactory.newStar(x, y, this.speed, this.acceleration);
+      this.ambient.unshift(obj);
+      this.scene.add(obj);
+
       if(this.currentState=='play'){
         //  The game is going to end in five seconds.
         if (this.points <= (this.speed + this.acceleration * 5) * 5){
@@ -159,12 +154,8 @@ class Game {
             type = "delta";
           }
           //  Space coordinates
-          aX = -this.camera.aspect * 10; // this.canvas.width / 100;
-          bX = -aX;
-          aY = -10; //this.canvas.height / 100;
-          bY = -aY;
-          x = aX + (bX - aX) * Math.random();
-          y = aY + (bY - aY) * Math.random();
+          x = this.camera.aspect * 10  * (1 - 2 * Math.random());
+          y = 10 * (1 - 2 * Math.random());
           obj = TargetFactory.newTarget(
             x,
             y,
