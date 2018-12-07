@@ -1,3 +1,5 @@
+const types = ['alfa','beta','gamma','delta'];
+
 class Target extends THREE.Mesh {
 	constructor(geometry, x, y, speed, acceleration, type,listener) {
 		super(geometry, new THREE.MeshPhongMaterial(
@@ -9,7 +11,7 @@ class Target extends THREE.Mesh {
 		));
 		//	Target type
 		this.type = type;
-		this._defineType();
+		this._commitType();
 		//	HSL represention of the color
 		this.hsl = {};
 		this.material.color.getHSL(this.hsl);
@@ -33,7 +35,7 @@ class Target extends THREE.Mesh {
 		this.add(this.sound);
 	}
 
-	_defineType(){
+	_commitType(){
 		//	Color and bonus value depends on the type
 		switch (this.type) {
 			case 'alfa':
@@ -57,6 +59,19 @@ class Target extends THREE.Mesh {
 				this.bonus = 1000;
 				break;
 		}
+	}
+
+	changeType(direction){
+		let i = types.indexOf(this.type);
+		//	Which way I'm visiting the array?
+		if(direction){ i++; }
+		else{	i--; }
+		//	Positive modulo
+		let l = types.length;
+		i = ((i % l) + l) % l;
+		//	Change type and commit
+		this.type = types[i];
+		this._commitType();
 	}
 
 	hit(){

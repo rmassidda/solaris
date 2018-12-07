@@ -139,10 +139,16 @@ function handleEnd(x,y){
 		if(currentState=='pause'){
 			gameScene.unmute();
 		}
+		else if(currentState=='edit'){
+			gameScene.changeTargetType(true);
+		}
 	}
 	else if(swipeDirection=='left'){
 		if(currentState=='pause'){
 			gameScene.mute();
+		}
+		else if(currentState=='edit'){
+			gameScene.changeTargetType(false);
 		}
 	}
 }

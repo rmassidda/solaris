@@ -348,6 +348,12 @@ class Game {
     return obj;
   }
 
+  changeTargetType(direction){
+    if(this.selected_target !== null){
+      this.selected_target.changeType(direction);
+    }
+  }
+
   end(){
     //  Game is ended, start timeout
     this.gameOverTimeout = 0;
