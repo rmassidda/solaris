@@ -81,6 +81,7 @@ function handleStart(x,y){
 	if(currentState=="edit"){
 		if(gameScene.selectTarget(tap)){
 			drag = true;
+			gameScene.startDrag(tap);
 		}
 		else{
 			swipe = new Swipe(tap.x,tap.y);
@@ -105,7 +106,7 @@ function handleMove(x,y){
 	if(drag){
 			tap.x = ( x / window.innerWidth ) * 2 - 1;
 			tap.y = - ( y / window.innerHeight) * 2 + 1;
-			gameScene.moveTarget(tap);
+			gameScene.continueDrag(tap);
 	}
 }
 
@@ -124,7 +125,6 @@ function handleEnd(x,y){
 	var swipeDirection = swipe.checkSwipe(tap.x,tap.y);
 	//	Single tap
 	if(drag){
-		gameScene.moveTarget(tap);
 		drag = false;
 	}
 	else if(swipeDirection==null){
