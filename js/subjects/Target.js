@@ -82,11 +82,13 @@ class Target extends THREE.Mesh {
 	}
 
 	select(){
-		this.material.emissive = new THREE.Color(0xff0000);
+		this.material.emissive = new THREE.Color(0xffffff);
+		this.material.emissiveIntensity = 0.2;
 	}
 
 	deselect(){
 		this.material.emissive = new THREE.Color(0x000000);
+		this.material.emissiveIntensity = 1;
 	}
 
 	update(delta) {
