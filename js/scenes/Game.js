@@ -40,7 +40,8 @@ class Game {
     //  Initialize game data
     this._initialize();
     this.highscore = 0;
-    //  Current game stae
+    //  Plane
+    this.plane = new THREE.Plane(new THREE.Vector3(0,0,1),50);
     this._updateCurrentState('intro');
   }
 
@@ -296,26 +297,22 @@ class Game {
 
   addTarget(tap){
     //  Space coordinates
-    /*var obj = TargetFactory.newTarget(
-      tap.x,
-      tap.y,
-      this.speed / 4,
-      this.acceleration,
-      "alfa",
-      this.listener
-    );
     var raycaster = new THREE.Raycaster();
     raycaster.setFromCamera( tap, this.camera );
-    var plane = new THREE.Plane(new THREE.Vector3(0,0,1),200);
-    var lien  =
-    if (intersects.length > 0) {
-      console.log('ok');
-      //  Make it nearer
-      obj.position.copy(intersects[0].point)
-      //  Add to targets
+    var point = raycaster.ray.intersectPlane(this.plane);
+    if(point!=null){
+      var obj = TargetFactory.newTarget(
+        tap.x,
+        tap.y,
+        this.speed / 4,
+        this.acceleration,
+        "alfa",
+        this.listener
+      );
+      obj.position.copy(point);
       this.targets.unshift(obj);
       this.scene.add(obj);
-    }*/
+    }
   }
 
   end(){
