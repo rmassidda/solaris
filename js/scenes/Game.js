@@ -40,8 +40,6 @@ class Game {
     //  Initialize game data
     this._initialize();
     this.highscore = 0;
-    //  Plane
-    this.plane = new THREE.Plane(new THREE.Vector3(0,0,1),50);
     this._updateCurrentState('intro');
   }
 
@@ -314,13 +312,12 @@ class Game {
     if (intersects.length > 0) {
       //  Target tapped
       this.selected_target = intersects[0].object;
+      this.selected_target.select();
+      return true;
     }
     else{
-      //  Create new target
-      this.selected_target = this.addTarget(tap);
+      return false;
     }
-    //  Select new target
-    this.selected_target.select();
   }
 
   addTarget(tap){
@@ -328,7 +325,9 @@ class Game {
     var raycaster = new THREE.Raycaster();
     raycaster.setFromCamera( tap, this.camera );
     //  Intersection with the plane
-    var point = raycaster.ray.intersectPlane(this.plane);
+    //  Plane
+    let plane = new THREE.Plane(new THREE.Vector3(0,0,1),50);
+    var point = raycaster.ray.intersectPlane(plane);
     //  New Object
     var obj = TargetFactory.newTarget(
       0,
@@ -345,7 +344,25 @@ class Game {
     //  Add to the scene
     this.scene.add(obj);
     //  Select it!
+    if(this.selected_target !== null){
+      this.selected_target.deselect();
+    }
+    this.selected_target = obj;
+    obj.select();
     return obj;
+  }
+
+  moveTarget(tap){
+    if(this.selected_target !== null){
+      //  Ray in direction of the tap
+      var raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera( tap, this.camera );
+      //  Intersection with the plane
+      let plane = new THREE.Plane(new THREE.Vector3(0,0,1),-this.selected_target.position.z);
+      var point = raycaster.ray.intersectPlane(plane);
+      //  Position it in the intersection
+      this.selected_target.position.copy(point);
+    }
   }
 
   changeTargetType(direction){

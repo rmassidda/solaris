@@ -20,6 +20,8 @@ var currentState;
 //	Swipe
 var swipe;
 var tap = new THREE.Vector2();
+//	Drag&Drop
+var drag = false;
 
 //	Bind user events to callback functions
 bindEventListeners();
@@ -76,14 +78,35 @@ function onTouchStart(event){
 function handleStart(x,y){
 	tap.x = ( x / window.innerWidth ) * 2 - 1;
 	tap.y = - ( y / window.innerHeight) * 2 + 1;
-	swipe = new Swipe(tap.x,tap.y);
+	if(currentState=="edit"){
+		if(gameScene.selectTarget(tap)){
+			drag = true;
+		}
+		else{
+			swipe = new Swipe(tap.x,tap.y);
+		}
+	}
+	else{
+		swipe = new Swipe(tap.x,tap.y);
+	}
 }
 
 function onTouchMove(event){
 	event.preventDefault();
+	handleMove(event.touches[0].pageX,event.touches[0].pageY);
 }
+
 function onMouseMove(event){
 	event.preventDefault();
+	handleMove(event.pageX,event.pageY);
+}
+
+function handleMove(x,y){
+	if(drag){
+			tap.x = ( x / window.innerWidth ) * 2 - 1;
+			tap.y = - ( y / window.innerHeight) * 2 + 1;
+			gameScene.moveTarget(tap);
+	}
 }
 
 function onTouchEnd(event){
@@ -100,7 +123,11 @@ function handleEnd(x,y){
 	tap.y = - ( y /  window.innerHeight) * 2 + 1;
 	var swipeDirection = swipe.checkSwipe(tap.x,tap.y);
 	//	Single tap
-	if(swipeDirection==null){
+	if(drag){
+		gameScene.moveTarget(tap);
+		drag = false;
+	}
+	else if(swipeDirection==null){
 		//	Fullscreen when clicked
 		if (fscreen.fullscreenElement === null && enableFullscreen) {
 			fscreen.requestFullscreen(document.body);
@@ -115,7 +142,7 @@ function handleEnd(x,y){
 			gameScene.shoot(tap);
 		}
 		else if(currentState == 'edit'){
-			gameScene.selectTarget(tap);
+			gameScene.addTarget(tap);
 		}
 		//	Intro/GameOver, start new game
 		else{
