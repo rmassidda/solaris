@@ -354,6 +354,17 @@ class Game {
     }
   }
 
+  depthTarget(direction){
+    if(this.selected_target !== null){
+      if(direction){
+        this.selected_target.position.z += 10;
+      }
+      else{
+        this.selected_target.position.z -= 10;
+      }
+    }
+  }
+
   end(){
     //  Game is ended, start timeout
     this.gameOverTimeout = 0;

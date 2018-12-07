@@ -124,14 +124,22 @@ function handleEnd(x,y){
 	}
 	//	Swipe Down
 	else if(swipeDirection=='down'){
-		//	Pause
-		gameScene.pause();
+		if(currentState == "edit"){
+			gameScene.depthTarget(false);
+		}
+		else{
+			//	Pause
+			gameScene.pause();
+		}
 	}
 	//	Swipe Up
 	else if(swipeDirection=='up'){
 		//	If the game is paused, new game
 		if(currentState=='pause'){
 			gameScene.restart();
+		}
+		else if(currentState == "edit"){
+			gameScene.depthTarget(true);
 		}
 	}
 	//	Swipe right
