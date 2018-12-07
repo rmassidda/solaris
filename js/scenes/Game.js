@@ -105,6 +105,8 @@ class Game {
     this.deltaOutOfFuel = 0;
     //  Time since last taget generation
     this.deltaGenerate = 0;
+    //  Timeout to start new game
+    this.gameOverTimeout = 0;
     //  Initial data
     this.points = start_point;
     this.score = 0;
@@ -184,6 +186,7 @@ class Game {
     this.deltaTime = this.clock.getDelta();
     this.deltaOutOfFuel += this.deltaTime;
     this.deltaGenerate += this.deltaTime;
+    this.gameOverTimeout += this.deltaTime;
     //  Play state
     if (this.currentState == 'play') {
       //  Update game data
@@ -264,8 +267,10 @@ class Game {
 
   //  State control functions
   play(){
-    this._initialize();
-    this._updateCurrentState('play');
+    if(this.gameOverTimeout>1){
+      this._initialize();
+      this._updateCurrentState('play');
+    }
   }
 
   pause() {
@@ -279,6 +284,8 @@ class Game {
   }
 
   end(){
+    //  Game is ended, start timeout
+    this.gameOverTimeout = 0;
     if(this.score>this.highscore){
       this.highscore = this.score;
     }
