@@ -192,31 +192,25 @@ class Game {
       this.points -= (this.deltaTime * this.speed) / 2;
       //  Update bullets position and detect collisions
       this.bullets.forEach(bullet =>{
-        //  Update position
-        if(bullet.update(this.deltaTime) < -200){
+        //  Ray caster to detect collision
+        let raycaster = new THREE.Raycaster(bullet.position, bullet.direction,0,10);
+        let intersects = raycaster.intersectObjects(this.targets, false);
+        if (intersects.length > 0) {
+          //  If the object isn't already been hitten
+          if (!intersects[0].object.hitten) {
+            //  Hit it!
+            intersects[0].object.hit();
+            //  Achieve bonus
+            this.points += intersects[0].object.bonus;
+            this.score += intersects[0].object.bonus;
+            //  Remove bullet
             this.to_remove.add(bullet);
-        }
-        else{
-          //  Ray caster to detect collision
-          let raycaster = new THREE.Raycaster(bullet.position, bullet.direction,0,10);
-          let intersects = raycaster.intersectObjects(this.targets, false);
-          if (intersects.length > 0) {
-            //  If the object isn't already been hitten
-            if (!intersects[0].object.hitten) {
-              //  Hit it!
-              intersects[0].object.hit();
-              //  Achieve bonus
-              this.points += intersects[0].object.bonus;
-              this.score += intersects[0].object.bonus;
-              //  Remove bullet
-              this.to_remove.add(bullet);
-              //  Notification
-              this.notify.unshift({
-                color: intersects[0].object.material.color,
-                value: intersects[0].object.bonus,
-                position: "center"
-              });
-            }
+            //  Notification
+            this.notify.unshift({
+              color: intersects[0].object.material.color,
+              value: intersects[0].object.bonus,
+              position: "center"
+            });
           }
         }
       });
@@ -237,6 +231,11 @@ class Game {
           //  Material can't be reused, so it's disposed
           target.material.dispose();
           this.to_remove.add(target);
+        }
+      });
+      this.bullets.forEach(bullet =>{
+        if(bullet.update(this.deltaTime) < -200){
+            this.to_remove.add(bullet);
         }
       });
       this.ambient.forEach(star =>{
