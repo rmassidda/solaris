@@ -106,7 +106,7 @@ class Target extends THREE.Mesh {
 			}
 		}
 		//	Rotation
-    this.rotation.y += delta * diespeed;
+    	this.rotation.y += delta * diespeed;
 		//	Movement
 		this.position.z += delta * speed;
 		return this.position.z;

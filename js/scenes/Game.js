@@ -7,10 +7,6 @@ const start_point = 3000;
 const start_speed = 100;
 const start_acceleration = 2;
 const bullet_loss = 10;
-var _offset = new THREE.Vector3();
-var _intersection = new THREE.Vector3();
-var _worldPosition = new THREE.Vector3();
-var _inverseMatrix = new THREE.Matrix4();
 
 class Game {
   constructor(canvas) {
@@ -304,7 +300,7 @@ class Game {
     }
   }
 
-  selectTarget(tap){
+  select(tap){
     //  Deselect old target
     if(this.selected_target !== null){
       this.selected_target.deselect();
@@ -318,10 +314,10 @@ class Game {
       //  Target tapped
       this.selected_target = intersects[0].object;
       this.selected_target.select();
-      return true;
+      return this.selected_target;
     }
     else{
-      return false;
+      return null;
     }
   }
 
@@ -355,31 +351,6 @@ class Game {
     this.selected_target = obj;
     obj.select();
     return obj;
-  }
-
-  startDrag(tap){
-    if(this.selected_target !== null){
-      //  Ray in direction of the tap
-      var raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera( tap, this.camera );
-      let plane = new THREE.Plane(new THREE.Vector3(0,0,1),-this.selected_target.position.z);
-      if(raycaster.ray.intersectPlane(plane,_intersection)){
-        _inverseMatrix.getInverse( this.selected_target.parent.matrixWorld );
-  			_offset.copy( _intersection ).sub( _worldPosition.setFromMatrixPosition( this.selected_target.matrixWorld ) );
-      }
-    }
-  }
-
-  continueDrag(tap){
-    if(this.selected_target !== null){
-      //  Ray in direction of the tap
-      var raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera( tap, this.camera );
-      let plane = new THREE.Plane(new THREE.Vector3(0,0,1),-this.selected_target.position.z);
-      if(raycaster.ray.intersectPlane(plane,_intersection)){
-			     this.selected_target.position.copy( _intersection.sub( _offset ).applyMatrix4( _inverseMatrix ) );
-			}
-		}
   }
 
   changeTargetType(){

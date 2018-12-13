@@ -1,6 +1,7 @@
 import fscreen from  './libs/fscreen/src/index.js'
 import Game from './scenes/Game.js'
 import Swipe from './libs/Swipe.js'
+import Drag from './libs/Drag.js';
 
 //	Canvas
 const canvas = document.getElementById("canvas");
@@ -21,7 +22,7 @@ var currentState;
 var swipe;
 var tap = new THREE.Vector2();
 //	Drag&Drop
-var drag = false;
+var drag = null;
 
 //	Bind user events to callback functions
 bindEventListeners();
@@ -79,9 +80,10 @@ function handleStart(x,y){
 	tap.x = ( x / window.innerWidth ) * 2 - 1;
 	tap.y = - ( y / window.innerHeight) * 2 + 1;
 	if(currentState=="edit"){
-		if(gameScene.selectTarget(tap)){
-			drag = true;
-			gameScene.startDrag(tap);
+		let target = gameScene.select(tap);
+		if(target !== null){
+			drag = new Drag(target);
+			drag.start(tap,gameScene.camera);
 		}
 		else{
 			swipe = new Swipe(tap.x,tap.y);
@@ -103,10 +105,10 @@ function onMouseMove(event){
 }
 
 function handleMove(x,y){
-	if(drag){
-			tap.x = ( x / window.innerWidth ) * 2 - 1;
-			tap.y = - ( y / window.innerHeight) * 2 + 1;
-			gameScene.continueDrag(tap);
+	if(drag !== null){
+		tap.x = ( x / window.innerWidth ) * 2 - 1;
+		tap.y = - ( y / window.innerHeight) * 2 + 1;
+		drag.continue(tap,gameScene.camera);
 	}
 }
 
@@ -124,8 +126,8 @@ function handleEnd(x,y){
 	tap.y = - ( y /  window.innerHeight) * 2 + 1;
 	var swipeDirection = swipe.checkSwipe(tap.x,tap.y);
 	//	Single tap
-	if(drag){
-		drag = false;
+	if(drag !== null){
+		drag = null;
 	}
 	else if(swipeDirection==null){
 		//	Fullscreen when clicked
