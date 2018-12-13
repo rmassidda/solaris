@@ -9,12 +9,11 @@ class Target extends THREE.Mesh {
 				shininess: 0.3
 			}
 		));
+		//	HSL represention of the color
+		this.hsl = {};
 		//	Target type
 		this.type = type;
 		this._commitType();
-		//	HSL represention of the color
-		this.hsl = {};
-		this.material.color.getHSL(this.hsl);
 		//	Where the target is
 		this.position.set(x, y, -250);
 		//	How the target moves
@@ -59,6 +58,7 @@ class Target extends THREE.Mesh {
 				this.bonus = 1000;
 				break;
 		}
+		this.material.color.getHSL(this.hsl);
 	}
 
 	changeType(){
