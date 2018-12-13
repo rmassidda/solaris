@@ -1,4 +1,4 @@
-import fscreen from  './libs/fscreen/src/index.js'
+import fscreen from  './third-party/fscreen/src/index.js'
 import Game from './scenes/Game.js'
 import Swipe from './libs/Swipe.js'
 import Drag from './libs/Drag.js';
