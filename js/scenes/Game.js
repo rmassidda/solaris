@@ -82,7 +82,7 @@ class Game {
     var sound = new THREE.Audio(this.listener);
     //  Load of the audio file
     var audioLoader = new THREE.AudioLoader();
-    audioLoader.load("../../sound/ambient.ogg", function(buffer) {
+    audioLoader.load("sound/ambient.ogg", function(buffer) {
       sound.setBuffer(buffer);
       sound.setLoop(true);
       sound.setVolume(0.7);

@@ -10,7 +10,7 @@ class Bullet extends THREE.Mesh {
     //  Audio
     var sound = new THREE.PositionalAudio(listener);
     var audioLoader = new THREE.AudioLoader();
-    audioLoader.load("../../sound/bullet.ogg", function(buffer) {
+    audioLoader.load("sound/bullet.ogg", function(buffer) {
       sound.setBuffer(buffer);
       sound.setRefDistance(10);
       sound.setVolume(0.1);
