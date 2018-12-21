@@ -1,8 +1,8 @@
 class Bullet extends THREE.Mesh {
-  constructor(geometry,material,dx, dy, speed, acceleration, listener) {
-    super(geometry,material);
+  constructor(geometry, material, dx, dy, speed, acceleration, listener) {
+    super(geometry, material);
     //  Where the bullet is
-    this.position.set(dx,dy,-1);
+    this.position.set(dx, dy, -1);
     //  How the bullet moves
     this.direction = new THREE.Vector3(dx, dy, -1).normalize();
     this.initial_speed = speed;

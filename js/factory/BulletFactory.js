@@ -9,9 +9,9 @@ const material = new THREE.MeshPhongMaterial({
   shininess: 0.3
 });
 
-class BulletFactory{
+class BulletFactory {
   //  Static method to create a new object
-  static newBullet(dx, dy, speed, acceleration, listener){
+  static newBullet(dx, dy, speed, acceleration, listener) {
     return new Bullet(geometry, material, dx, dy, speed, acceleration, listener);
   }
 }

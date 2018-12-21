@@ -77,7 +77,7 @@ class Game {
     return camera;
   }
 
-  _buildUndertone(){
+  _buildUndertone() {
     //  Source
     var sound = new THREE.Audio(this.listener);
     //  Load of the audio file
@@ -91,12 +91,12 @@ class Game {
     return sound;
   }
 
-  _updateCurrentState(state){
+  _updateCurrentState(state) {
     this.currentState = state;
     this.stateStack.unshift(state);
   }
 
-  _initialize(){
+  _initialize() {
     //  Game Clock
     this.clock = new THREE.Clock();
     this.deltaTime = 0;
@@ -115,9 +115,9 @@ class Game {
     this.muted = false;
   }
 
-  _generate(){
+  _generate() {
     let n, aX, bX, aY, bY, x, y, obj;
-    if(this.currentState!='pause'){
+    if (this.currentState != 'pause') {
       //  Star generation
       x = Math.floor(this.canvas.width * (1 - 2 * Math.random()));
       y = Math.floor(this.canvas.height * (1 - 2 * Math.random()));
@@ -125,11 +125,11 @@ class Game {
       this.ambient.unshift(obj);
       this.scene.add(obj);
 
-      if(this.currentState=='play'){
+      if (this.currentState == 'play') {
         //  The game is going to end in five seconds.
-        if (this.points <= (this.speed + this.acceleration * 5) * 5){
+        if (this.points <= (this.speed + this.acceleration * 5) * 5) {
           //  The notification has been sent more than a second ago
-          if(this.deltaOutOfFuel > 1){
+          if (this.deltaOutOfFuel > 1) {
             this.notify.unshift({
               color: {
                 r: 1,
@@ -143,11 +143,11 @@ class Game {
           }
         }
         //  The last element has been generated more than a second ago
-        if (this.deltaGenerate > 1 ) {
+        if (this.deltaGenerate > 1) {
           //  Random type
           var choice = Math.random();
           var type = "";
-          if (choice <= 0.5){
+          if (choice <= 0.5) {
             type = "alfa";
           } else if (choice <= 0.8) {
             type = "beta";
@@ -157,7 +157,7 @@ class Game {
             type = "delta";
           }
           //  Space coordinates
-          x = this.camera.aspect * 10  * (1 - 2 * Math.random());
+          x = this.camera.aspect * 10 * (1 - 2 * Math.random());
           y = 10 * (1 - 2 * Math.random());
           obj = TargetFactory.newTarget(
             x,
@@ -172,7 +172,7 @@ class Game {
           this.scene.add(obj);
           this.deltaGenerate = 0;
         }
-        while(this.bullets_to_add.length!=0){
+        while (this.bullets_to_add.length != 0) {
           let bullet = this.bullets_to_add.pop();
           this.scene.add(bullet);
           this.bullets.unshift(bullet);
@@ -195,9 +195,9 @@ class Game {
       //  Decrease player's points
       this.points -= (this.deltaTime * this.speed) / 2;
       //  Update bullets position and detect collisions
-      this.bullets.forEach(bullet =>{
+      this.bullets.forEach(bullet => {
         //  Ray caster to detect collision
-        let raycaster = new THREE.Raycaster(bullet.position, bullet.direction,0,10);
+        let raycaster = new THREE.Raycaster(bullet.position, bullet.direction, 0, 10);
         let intersects = raycaster.intersectObjects(this.targets, false);
         if (intersects.length > 0) {
           //  If the object isn't already been hitten
@@ -230,22 +230,22 @@ class Game {
       }
     }
     if (this.currentState != "pause") {
-      if(this.currentState != "edit"){
-        this.targets.forEach(target =>{
-          if(target.update(this.deltaTime)>0||target.dead){
+      if (this.currentState != "edit") {
+        this.targets.forEach(target => {
+          if (target.update(this.deltaTime) > 0 || target.dead) {
             //  Material can't be reused, so it's disposed
             target.material.dispose();
             this.to_remove.add(target);
           }
         });
       }
-      this.bullets.forEach(bullet =>{
-        if(bullet.update(this.deltaTime) < -200){
-            this.to_remove.add(bullet);
+      this.bullets.forEach(bullet => {
+        if (bullet.update(this.deltaTime) < -200) {
+          this.to_remove.add(bullet);
         }
       });
-      this.ambient.forEach(star =>{
-        if(star.update(this.deltaTime)>0){
+      this.ambient.forEach(star => {
+        if (star.update(this.deltaTime) > 0) {
           this.to_remove.add(star);
         }
       });
@@ -269,8 +269,8 @@ class Game {
   }
 
   //  State control functions
-  play(){
-    if(this.gameOverTimeout>1){
+  play() {
+    if (this.gameOverTimeout > 1) {
       this._initialize();
       this._updateCurrentState('play');
     }
@@ -286,48 +286,46 @@ class Game {
     }
   }
 
-  edit(){
-    if(this.currentState == "play"){
+  edit() {
+    if (this.currentState == "play") {
       this._updateCurrentState("edit");
-    }
-    else if(this.currentState == "edit"){
+    } else if (this.currentState == "edit") {
       this._updateCurrentState("play");
       //  Deselect old target
-      if(this.selected_target !== null){
+      if (this.selected_target !== null) {
         this.selected_target.deselect();
         this.selected_target = null;
       }
     }
   }
 
-  select(tap){
+  select(tap) {
     //  Deselect old target
-    if(this.selected_target !== null){
+    if (this.selected_target !== null) {
       this.selected_target.deselect();
     }
     //  Ray in the direction of the tap
     var raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera( tap, this.camera );
+    raycaster.setFromCamera(tap, this.camera);
     // Targets intersecting the ray
-    var intersects = raycaster.intersectObjects( this.targets );
+    var intersects = raycaster.intersectObjects(this.targets);
     if (intersects.length > 0) {
       //  Target tapped
       this.selected_target = intersects[0].object;
       this.selected_target.select();
       return this.selected_target;
-    }
-    else{
+    } else {
       return null;
     }
   }
 
-  addTarget(tap){
+  addTarget(tap) {
     //  Ray in direction of the tap
     var raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera( tap, this.camera );
+    raycaster.setFromCamera(tap, this.camera);
     //  Intersection with the plane
     //  Plane
-    let plane = new THREE.Plane(new THREE.Vector3(0,0,1),50);
+    let plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 50);
     var point = raycaster.ray.intersectPlane(plane);
     //  New Object
     var obj = TargetFactory.newTarget(
@@ -345,7 +343,7 @@ class Game {
     //  Add to the scene
     this.scene.add(obj);
     //  Select it!
-    if(this.selected_target !== null){
+    if (this.selected_target !== null) {
       this.selected_target.deselect();
     }
     this.selected_target = obj;
@@ -353,39 +351,38 @@ class Game {
     return obj;
   }
 
-  changeTargetType(){
-    if(this.selected_target !== null){
+  changeTargetType() {
+    if (this.selected_target !== null) {
       this.selected_target.changeType();
     }
   }
 
-  depthTarget(direction){
-    if(this.selected_target !== null){
-      if(direction){
+  depthTarget(direction) {
+    if (this.selected_target !== null) {
+      if (direction) {
         this.selected_target.position.z += 10;
-      }
-      else{
+      } else {
         this.selected_target.position.z -= 10;
       }
     }
   }
 
-  end(){
+  end() {
     //  Game is ended, start timeout
     this.gameOverTimeout = 0;
     //  Update highscore
-    if(this.score>this.highscore){
+    if (this.score > this.highscore) {
       this.highscore = this.score;
     }
     //  Destroy remaining targets
     this.targets.forEach(target => {
-      if(!target.hitten){
+      if (!target.hitten) {
         target.hit();
       }
     });
   }
 
-  restart(){
+  restart() {
     this.end();
     this.play();
   }
@@ -411,11 +408,10 @@ class Game {
   }
 
   //  Audio
-  mute(){
-    if(this.muted){
+  mute() {
+    if (this.muted) {
       this.listener.setMasterVolume(1);
-    }
-    else{
+    } else {
       this.listener.setMasterVolume(0);
     }
     this.muted = !this.muted;
