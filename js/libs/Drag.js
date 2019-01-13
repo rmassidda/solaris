@@ -4,12 +4,12 @@ class Drag {
     this.target = target;
     this.offset = new THREE.Vector3();
     this.intersection = new THREE.Vector3();
-    this.worldPosition = new THREE.Vector3();
     this.inverseMatrix = new THREE.Matrix4();
     this.raycaster = new THREE.Raycaster();
   }
 
   start(tap, camera) {
+    let worldPosition = new THREE.Vector3();
     //  Ray generation
     this.raycaster.setFromCamera(tap, camera);
     //  Plane at the same distance of the object
@@ -19,7 +19,7 @@ class Drag {
       //  Inverse matrix used to
       this.inverseMatrix.getInverse(this.target.parent.matrixWorld);
       //  Offset from the tapped point and the object, in world coordinates
-      this.offset.copy(this.intersection).sub(this.worldPosition.setFromMatrixPosition(this.target.matrixWorld));
+      this.offset.copy(this.intersection).sub(worldPosition.setFromMatrixPosition(this.target.matrixWorld));
     }
   }
 
