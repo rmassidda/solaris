@@ -326,8 +326,7 @@ class Game {
     //  Intersection with the plane
     //  Plane
     let plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 50);
-    var point = new THREE.Vector3();
-    raycaster.ray.intersectPlane(plane, point);
+    let point = raycaster.ray.intersectPlane(plane,new THREE.Vector3());
     //  New Object
     var obj = TargetFactory.newTarget(
       0,
