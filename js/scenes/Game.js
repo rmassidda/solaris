@@ -383,8 +383,11 @@ class Game {
   }
 
   restart() {
+    if(this.currentState == 'pause')
+      this.pause();
     this.end();
-    this.play();
+    this._initialize();
+    this._updateCurrentState('play');
   }
 
   shoot(mouse) {
