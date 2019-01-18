@@ -325,7 +325,7 @@ class Game {
     raycaster.setFromCamera(tap, this.camera);
     //  Intersection with the plane
     //  Plane
-    let plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 50);
+    let plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 75);
     let point = raycaster.ray.intersectPlane(plane,new THREE.Vector3());
     //  New Object
     var obj = TargetFactory.newTarget(
