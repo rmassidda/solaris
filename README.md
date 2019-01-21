@@ -18,3 +18,5 @@ A quick way to run a web server is using *SimpleHTTPServer*
 > python -m SimpleHTTPServer
 
 Then visit from a supported browser [localhost:8000](http://localhost:8000).
+
+Otherwise you can try a live demo on my [personal website](https://rmassidda.it/solaris).
