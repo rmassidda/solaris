@@ -14,6 +14,10 @@ Try to catch them and see how far you can travel!
 This software has been developed as the final project of the Interface Programming course at the [University of Pisa](https://www.di.unipi.it/).
 
 ## How to run
+
+Clone including submodules
+> git clone --recurse-submodules https://github.com/rmassidda/Solaris
+
 A quick way to run a web server is using *SimpleHTTPServer*
 > python -m SimpleHTTPServer
 
