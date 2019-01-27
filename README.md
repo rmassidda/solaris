@@ -1,5 +1,7 @@
 # Solaris
 
+![screenshot](screenshot.png)
+
 ## Synopsis
 According to *The Hitchhikers Guide to the Galaxy*, the space truckers of Magrathea have a perfect software that manages route, supplies and fuel for them.
 
