@@ -1,0 +1,3 @@
+[submodule "js/third-party/fscreen"]
+	path = js/third-party/fscreen
+	url = https://github.com/rafrex/fscreen
